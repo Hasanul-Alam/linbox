@@ -1,6 +1,7 @@
 import CommonHeader from "@/components/reusableComponents/commonHeader/commonHeader";
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import DashboardScreen from "../screens/dashboardScreens/dashboardScreen";
 
 const Dashboard = () => {
   return (
@@ -38,6 +39,9 @@ const Dashboard = () => {
           <View className="w-full">
             <CommonHeader />
           </View>
+
+          {/* Main Content */}
+          <DashboardScreen />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
