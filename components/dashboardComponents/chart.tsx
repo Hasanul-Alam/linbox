@@ -1,13 +1,12 @@
 import React from "react";
-import { Dimensions, Text, View } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+import { Dimensions, View } from "react-native";
+import { PieChart } from "react-native-chart-kit";
 
 const Chart = () => {
   const screenWidth = Dimensions.get("window").width;
   const theme: string = "light"; // Default to light theme since we don't have context
 
-  // Default data when messageData is not available
-  const defaultLabels = ["Jan", "Feb", "Mar", "Apr", "May"];
+  // Data for the pie chart - we'll use totals from all months
   const defaultCounts = [
     { sent: 10, delivered: 8, read: 6, responded: 4, failed: 2 },
     { sent: 15, delivered: 12, read: 9, responded: 6, failed: 3 },
@@ -16,36 +15,57 @@ const Chart = () => {
     { sent: 20, delivered: 18, read: 15, responded: 10, failed: 2 },
   ];
 
-  const chartData = {
-    labels: defaultLabels,
-    datasets: [
-      {
-        legendLabel: "Sent",
-        data: defaultCounts.map((item) => item.sent),
-        color: (opacity = 1) => `rgba(63, 81, 181, ${opacity})`,
-      },
-      {
-        legendLabel: "Delivered",
-        data: defaultCounts.map((item) => item.delivered),
-        color: (opacity = 1) => `rgba(76, 175, 80, ${opacity})`,
-      },
-      {
-        legendLabel: "Read",
-        data: defaultCounts.map((item) => item.read),
-        color: (opacity = 1) => `rgba(255, 193, 7, ${opacity})`,
-      },
-      {
-        legendLabel: "Respond",
-        data: defaultCounts.map((item) => item.responded),
-        color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
-      },
-      {
-        legendLabel: "Failed",
-        data: defaultCounts.map((item) => item.failed),
-        color: (opacity = 1) => `rgba(244, 67, 54, ${opacity})`,
-      },
-    ],
-  };
+  // Calculate totals for each category
+  const totals = defaultCounts.reduce(
+    (acc, curr) => {
+      return {
+        sent: acc.sent + curr.sent,
+        delivered: acc.delivered + curr.delivered,
+        read: acc.read + curr.read,
+        responded: acc.responded + curr.responded,
+        failed: acc.failed + curr.failed,
+      };
+    },
+    { sent: 0, delivered: 0, read: 0, responded: 0, failed: 0 }
+  );
+
+  const pieData = [
+    {
+      name: "Sent",
+      population: totals.sent,
+      color: "rgba(63, 81, 181, 1)",
+      legendFontColor: theme === "dark" ? "#fff" : "#000",
+      legendFontSize: 14,
+    },
+    {
+      name: "Delivered",
+      population: totals.delivered,
+      color: "rgba(76, 175, 80, 1)",
+      legendFontColor: theme === "dark" ? "#fff" : "#000",
+      legendFontSize: 14,
+    },
+    {
+      name: "Read",
+      population: totals.read,
+      color: "rgba(255, 193, 7, 1)",
+      legendFontColor: theme === "dark" ? "#fff" : "#000",
+      legendFontSize: 14,
+    },
+    {
+      name: "Responded",
+      population: totals.responded,
+      color: "rgba(33, 150, 243, 1)",
+      legendFontColor: theme === "dark" ? "#fff" : "#000",
+      legendFontSize: 14,
+    },
+    {
+      name: "Failed",
+      population: totals.failed,
+      color: "rgba(244, 67, 54, 1)",
+      legendFontColor: theme === "dark" ? "#fff" : "#000",
+      legendFontSize: 14,
+    },
+  ];
 
   return (
     <View
@@ -57,41 +77,25 @@ const Chart = () => {
         backgroundColor: theme === "dark" ? "#060b12" : "#fff",
       }}
     >
-      <LineChart
-        data={{
-          labels: chartData.labels,
-          datasets: chartData.datasets.map((dataset) => ({
-            data: dataset.data,
-            color: dataset.color,
-          })),
-        }}
+      <PieChart
+        data={pieData}
         width={screenWidth - 20}
-        height={240}
+        height={220}
         chartConfig={{
           backgroundColor: "transparent",
           backgroundGradientFrom: theme === "dark" ? "#060b12" : "#fff",
           backgroundGradientTo: theme === "dark" ? "#060b12" : "#fff",
-          decimalPlaces: 0,
           color: (opacity = 1) =>
             theme === "dark"
               ? `rgba(255, 255, 255, ${opacity})`
-              : `rgba(50, 115, 220, ${opacity})`,
-          labelColor: (opacity = 1) =>
-            theme === "dark"
-              ? `rgba(255, 255, 255, ${opacity})`
               : `rgba(0, 0, 0, ${opacity})`,
-          style: {
-            borderRadius: 8,
-          },
-          propsForDots: {
-            r: "4",
-            strokeWidth: "2",
-            stroke: theme === "dark" ? "#fff" : "#3273DC",
-          },
         }}
+        accessor="population"
+        backgroundColor="transparent"
+        paddingLeft="15"
+        absolute // Shows actual values instead of percentages
         style={{
           marginVertical: 12,
-          marginHorizontal: 20,
           borderRadius: 12,
           shadowColor: "#000",
           shadowOffset: { width: 0, height: 2 },
@@ -99,18 +103,18 @@ const Chart = () => {
           shadowRadius: 4,
           elevation: 1,
         }}
-        bezier
       />
 
-      {/* Uncomment if you want to show the legend */}
-      <View
+      {/* Optional: Additional legend if needed */}
+      {/* <View
         style={{
           flexDirection: "row",
           flexWrap: "wrap",
           justifyContent: "center",
+          marginTop: 10,
         }}
       >
-        {chartData.datasets.map((dataset, index) => (
+        {pieData.map((data, index) => (
           <View
             key={index}
             style={{ flexDirection: "row", alignItems: "center", margin: 5 }}
@@ -120,7 +124,7 @@ const Chart = () => {
                 width: 12,
                 height: 12,
                 borderRadius: 6,
-                backgroundColor: dataset.color(1),
+                backgroundColor: data.color,
                 marginRight: 5,
               }}
             />
@@ -130,11 +134,11 @@ const Chart = () => {
                 color: theme === "dark" ? "#fff" : "#000",
               }}
             >
-              {dataset.legendLabel}
+              {data.name}: {data.population}
             </Text>
           </View>
         ))}
-      </View>
+      </View> */}
     </View>
   );
 };
