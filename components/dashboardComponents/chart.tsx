@@ -11,10 +11,10 @@ const CENTER_CIRCLE_RADIUS = INNER_RADIUS - 5;
 
 // Chart data
 const DATA = [
-  { label: "Completed", value: 60.6, color: "#000000" },
-  { label: "In Progress", value: 26.4, color: "#2ECC71" },
-  { label: "Behind", value: 3, color: "#6A5ACD" },
-  { label: "Cancelled", value: 10, color: "#FFC0CB" },
+  { label: "Sent", value: 60.6, color: "#2ECC71" },
+  { label: "Delivered", value: 26.4, color: "#6A5ACD" },
+  { label: "Read", value: 3, color: "#4cdfdf" },
+  { label: "Failed", value: 10, color: "#e76f83" },
 ] as const;
 
 const DonutChartCustom = () => {

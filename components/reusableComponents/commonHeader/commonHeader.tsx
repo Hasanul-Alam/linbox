@@ -76,56 +76,65 @@ const CommonHeader = () => {
   };
 
   return (
-    <View>
+    <View className="w-[90%] mx-auto">
       {/* Main header container */}
-      <View className="flex-row justify-between items-center w-[90%] mx-auto gap-3">
-        {/* Workspace selector button */}
+      <View className="flex-row justify-between items-center gap-3">
+        {/* Workspace selector */}
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={toggleWorkspacePopup}
           onLayout={onHeaderLayout}
-          className="w-[90%] py-2 px-5 bg-white border border-[#e7e5e7] mx-auto rounded-2xl"
+          className="flex-row items-center px-4 py-2 rounded-full border border-gray-200 gap-3"
         >
-          <View className="flex-row items-center justify-between">
-            <View className="flex-row items-center gap-2">
-              <Text className="text-lg text-black font-medium">
-                Workspace 1
+          <View className="w-[30px] h-[30px] overflow-hidden">
+            <Image
+              source={require("../../../assets/images/workspace.jpg")}
+              className="w-full h-full rounded-full"
+            />
+          </View>
+          <View className="flex-row items-center">
+            <Text className="text-base font-semibold text-gray-900">
+              Workspace 1
+            </Text>
+
+            {/* Inline subtitle */}
+            <View className="flex-row items-center ml-3">
+              <Text className="text-xs text-indigo-700 font-medium">
+                Internal
               </Text>
-              <View className="flex-row items-center gap-1 bg-slate-200 px-2 rounded-md">
-                <Text className="text-sm text-black">Internal</Text>
-              </View>
-            </View>
-            <View>
-              <MaterialIcons
-                name="keyboard-arrow-down"
-                size={24}
-                color="black"
-                style={{
-                  transform: [
-                    { rotate: isWorkspacePopupVisible ? "180deg" : "0deg" },
-                  ],
-                }}
-              />
+              {/* <Text className="text-xs text-gray-500 ml-3">5 members</Text> */}
             </View>
           </View>
+
+          {/* Dropdown icon */}
+          <MaterialIcons
+            name="keyboard-arrow-down"
+            size={24}
+            color="#6b7280"
+            style={{
+              transform: [
+                { rotate: isWorkspacePopupVisible ? "180deg" : "0deg" },
+              ],
+            }}
+          />
         </TouchableOpacity>
 
-        {/* Profile picture button */}
+        {/* Profile picture */}
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={toggleProfilePopup}
           onLayout={onProfileImageLayout}
-          className="relative"
+          className="w-[37px] h-[37px] bg-white overflow-hidden"
         >
           {profileImage ? (
             <Image
               source={profileImage}
-              className="w-[40px] h-[40px] rounded-full border border-gray-200"
+              className="w-full h-full rounded-full"
             />
           ) : (
-            <View className="w-[40px] h-[40px] rounded-full bg-purple-500 items-center justify-center">
-              <Text className="text-white font-bold text-lg">H</Text>
-            </View>
+            <Text className="text-white font-bold text-lg bg-purple-500 w-[40px] h-[40px] rounded-full text-center leading-[40px]">
+              H
+            </Text>
           )}
         </TouchableOpacity>
       </View>
@@ -170,7 +179,7 @@ const CommonHeader = () => {
                 <Text className="text-[16px] font-medium text-gray-800">
                   Marketing Team
                 </Text>
-                <Text className="text-sm text-gray-500 mt-1">5 members</Text>
+                {/* <Text className="text-sm text-gray-500 mt-1">5 members</Text> */}
               </TouchableOpacity>
 
               <TouchableOpacity className="px-5 py-3 active:bg-gray-50">
@@ -178,18 +187,6 @@ const CommonHeader = () => {
                   Development
                 </Text>
                 <Text className="text-sm text-gray-500 mt-1">12 members</Text>
-              </TouchableOpacity>
-
-              {/* Create new workspace option */}
-              <TouchableOpacity className="px-5 py-3 border-t border-gray-100 bg-gray-50 active:bg-gray-100">
-                <View className="flex-row items-center gap-3">
-                  <View className="w-6 h-6 rounded-full bg-indigo-100 items-center justify-center">
-                    <MaterialIcons name="add" size={16} color="#4f46e5" />
-                  </View>
-                  <Text className="text-indigo-600 font-medium">
-                    Create new workspace
-                  </Text>
-                </View>
               </TouchableOpacity>
             </View>
           </View>

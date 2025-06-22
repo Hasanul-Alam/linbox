@@ -1,7 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-// import LoginPageImage from "../../assets/images/sign-in-page-preview.svg";
 
 const Login = () => {
   const router = useRouter();
@@ -16,7 +15,8 @@ const Login = () => {
         <View className="mb-16 flex items-center justify-center">
           {/* <LoginGif /> */}
           <Image
-            source={require("../../assets/images/sign-in-page-preview.png")}
+            className="mb-10"
+            source={require("../../assets/images/loginImage.png")}
             style={{ height: 400, width: 400 }}
             resizeMode="contain"
           />
