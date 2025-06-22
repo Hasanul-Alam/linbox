@@ -1,30 +1,25 @@
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import {
+  Image,
   KeyboardAvoidingView,
+  Linking,
   Platform,
   SafeAreaView,
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
 
 const LiveChat = () => {
-  const router = useRouter();
+  const handleWhatsAppRedirect = () => {
+    const url =
+      "https://api.whatsapp.com/send/?phone=447309574692&text=Hi&type=phone_number&app_absent=0";
+    Linking.openURL(url);
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Back Button (FIXED at top-left) */}
-      <TouchableOpacity
-        className="absolute top-4 left-6 z-10 bg-slate-200 p-2 rounded-full"
-        style={{ marginTop: Platform.OS === "android" ? 30 : 0 }}
-        onPress={() => router.back()}
-      >
-        <Ionicons name="chevron-back" size={20} color="black" />
-      </TouchableOpacity>
-
-      {/* Scrollable Content */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
@@ -34,13 +29,47 @@ const LiveChat = () => {
             flexGrow: 1,
             justifyContent: "center",
             alignItems: "center",
-          }} // Centers form
+            paddingHorizontal: 24,
+            paddingBottom: 40,
+          }}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Main Form (Centered) */}
-          <View className="px-6 pb-10">
-            <Text className="text-4xl font-medium text-black">LiveChat</Text>
-          </View>
+          {/* Chat Illustration */}
+          <Image
+            source={{
+              uri: "https://cdn-icons-png.flaticon.com/512/733/733585.png", // WhatsApp icon or chat illustration
+            }}
+            style={{
+              width: 120,
+              height: 120,
+              marginBottom: 24,
+            }}
+            resizeMode="contain"
+          />
+
+          {/* Heading */}
+          <Text className="text-4xl font-semibold text-black mb-3">
+            Live Chat
+          </Text>
+
+          {/* Subtext */}
+          <Text className="text-center text-base text-gray-600 mb-10">
+            Need help? Tap the button below to start a live chat on WhatsApp
+            with our support team.
+          </Text>
+
+          {/* WhatsApp Button */}
+          <TouchableOpacity
+            onPress={handleWhatsAppRedirect}
+            className="flex-row items-center justify-center px-6 py-3 rounded-full"
+            style={{ backgroundColor: "#22c065" }}
+            activeOpacity={0.8}
+          >
+            <FontAwesome name="whatsapp" size={20} color="#fff" />
+            <Text className="text-white text-base font-semibold ml-2">
+              Chat on WhatsApp
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
