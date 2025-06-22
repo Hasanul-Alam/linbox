@@ -1,7 +1,7 @@
-import LoginGif from "@/components/ui/loginGif";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+// import LoginPageImage from "../../assets/images/sign-in-page-preview.svg";
 
 const Login = () => {
   const router = useRouter();
@@ -14,7 +14,13 @@ const Login = () => {
       {/* Bottom buttons */}
       <View className="mb-10 px-5">
         <View className="mb-16 flex items-center justify-center">
-          <LoginGif />
+          {/* <LoginGif /> */}
+          <Image
+            source={require("../../assets/images/sign-in-page-preview.png")}
+            style={{ height: 400, width: 400 }}
+            resizeMode="contain"
+          />
+          {/* <LoginPageImage width={200} height={200} /> */}
           <Text className="text-4xl font-medium text-black">
             Welcome To Linbox
           </Text>
@@ -37,7 +43,6 @@ const Login = () => {
             <Text className="text-center text-black text-lg">Sign In</Text>
           </View>
         </TouchableOpacity>
-
         <TouchableOpacity
           activeOpacity={0.8}
           className="flex-row items-center gap-2 mt-5 border border-[#e7e5e7] rounded-full justify-center py-3"

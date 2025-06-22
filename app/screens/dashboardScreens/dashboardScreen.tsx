@@ -71,7 +71,7 @@ const renderCard: ListRenderItem<(typeof cardTtiles)[0]> = ({
 const DashboardScreen = () => (
   <View className="w-[90%] mx-auto">
     <View
-      className={`w-full h-[100px] mx-auto rounded-xl opacity-85 bg-black mt-5`}
+      className={`w-full h-[100px] rounded-[30px] mx-auto opacity-85 bg-primary mt-5`}
     >
       <View className="flex flex-row justify-between w-[95%] mx-auto mt-3">
         <View>

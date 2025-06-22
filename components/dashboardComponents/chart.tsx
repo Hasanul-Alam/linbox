@@ -1,146 +1,96 @@
+import * as d3Shape from "d3-shape";
 import React from "react";
-import { Dimensions, View } from "react-native";
-import { PieChart } from "react-native-chart-kit";
+import { StyleSheet, Text, View } from "react-native";
+import Svg, { Circle, G, Path } from "react-native-svg";
 
-const Chart = () => {
-  const screenWidth = Dimensions.get("window").width;
-  const theme: string = "light"; // Default to light theme since we don't have context
+// Constants
+const CHART_SIZE = 180;
+const RADIUS = CHART_SIZE / 2;
+const INNER_RADIUS = 50;
+const CENTER_CIRCLE_RADIUS = INNER_RADIUS - 5;
 
-  // Data for the pie chart - we'll use totals from all months
-  const defaultCounts = [
-    { sent: 10, delivered: 8, read: 6, responded: 4, failed: 2 },
-    { sent: 15, delivered: 12, read: 9, responded: 6, failed: 3 },
-    { sent: 8, delivered: 7, read: 5, responded: 3, failed: 1 },
-    { sent: 12, delivered: 10, read: 7, responded: 5, failed: 2 },
-    { sent: 20, delivered: 18, read: 15, responded: 10, failed: 2 },
-  ];
+// Chart data
+const DATA = [
+  { label: "Completed", value: 60.6, color: "#000000" },
+  { label: "In Progress", value: 26.4, color: "#2ECC71" },
+  { label: "Behind", value: 3, color: "#6A5ACD" },
+  { label: "Cancelled", value: 10, color: "#FFC0CB" },
+] as const;
 
-  // Calculate totals for each category
-  const totals = defaultCounts.reduce(
-    (acc, curr) => {
-      return {
-        sent: acc.sent + curr.sent,
-        delivered: acc.delivered + curr.delivered,
-        read: acc.read + curr.read,
-        responded: acc.responded + curr.responded,
-        failed: acc.failed + curr.failed,
-      };
-    },
-    { sent: 0, delivered: 0, read: 0, responded: 0, failed: 0 }
-  );
+const DonutChartCustom = () => {
+  // Generate pie chart segments
+  const pieData = d3Shape
+    .pie()
+    .value((d: any) => d.value)
+    .padAngle(0.03)(DATA); // Add small spacing between segments
 
-  const pieData = [
-    {
-      name: "Sent",
-      population: totals.sent,
-      color: "rgba(63, 81, 181, 1)",
-      legendFontColor: theme === "dark" ? "#fff" : "#000",
-      legendFontSize: 14,
-    },
-    {
-      name: "Delivered",
-      population: totals.delivered,
-      color: "rgba(76, 175, 80, 1)",
-      legendFontColor: theme === "dark" ? "#fff" : "#000",
-      legendFontSize: 14,
-    },
-    {
-      name: "Read",
-      population: totals.read,
-      color: "rgba(255, 193, 7, 1)",
-      legendFontColor: theme === "dark" ? "#fff" : "#000",
-      legendFontSize: 14,
-    },
-    {
-      name: "Responded",
-      population: totals.responded,
-      color: "rgba(33, 150, 243, 1)",
-      legendFontColor: theme === "dark" ? "#fff" : "#000",
-      legendFontSize: 14,
-    },
-    {
-      name: "Failed",
-      population: totals.failed,
-      color: "rgba(244, 67, 54, 1)",
-      legendFontColor: theme === "dark" ? "#fff" : "#000",
-      legendFontSize: 14,
-    },
-  ];
+  // Arc generator for chart segments
+  const arcGenerator = d3Shape
+    .arc()
+    .outerRadius(RADIUS)
+    .innerRadius(INNER_RADIUS)
+    .cornerRadius(5); // Rounded corners for segments
 
   return (
-    <View
-      style={{
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 10,
-        width: "100%",
-        backgroundColor: theme === "dark" ? "#060b12" : "#fff",
-      }}
-    >
-      <PieChart
-        data={pieData}
-        width={screenWidth - 20}
-        height={220}
-        chartConfig={{
-          backgroundColor: "transparent",
-          backgroundGradientFrom: theme === "dark" ? "#060b12" : "#fff",
-          backgroundGradientTo: theme === "dark" ? "#060b12" : "#fff",
-          color: (opacity = 1) =>
-            theme === "dark"
-              ? `rgba(255, 255, 255, ${opacity})`
-              : `rgba(0, 0, 0, ${opacity})`,
-        }}
-        accessor="population"
-        backgroundColor="transparent"
-        paddingLeft="15"
-        absolute // Shows actual values instead of percentages
-        style={{
-          marginVertical: 12,
-          borderRadius: 12,
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 4,
-          elevation: 1,
-        }}
-      />
-
-      {/* Optional: Additional legend if needed */}
-      {/* <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          marginTop: 10,
-        }}
-      >
-        {pieData.map((data, index) => (
-          <View
-            key={index}
-            style={{ flexDirection: "row", alignItems: "center", margin: 5 }}
-          >
-            <View
-              style={{
-                width: 12,
-                height: 12,
-                borderRadius: 6,
-                backgroundColor: data.color,
-                marginRight: 5,
-              }}
+    <View style={styles.container}>
+      {/* Chart SVG */}
+      <Svg width={CHART_SIZE} height={CHART_SIZE}>
+        <G x={RADIUS} y={RADIUS}>
+          {/* Render each segment */}
+          {/* @ts-ignore */}
+          {pieData.map((slice, index) => (
+            <Path
+              key={index}
+              d={arcGenerator(slice) || ""}
+              fill={DATA[index].color}
             />
-            <Text
-              style={{
-                fontSize: 14,
-                color: theme === "dark" ? "#fff" : "#000",
-              }}
-            >
-              {data.name}: {data.population}
+          ))}
+          {/* Center circle (donut hole) */}
+          <Circle cx={0} cy={0} r={CENTER_CIRCLE_RADIUS} fill="#fff" />
+        </G>
+      </Svg>
+
+      {/* Legend */}
+      <View style={styles.legendContainer}>
+        {DATA.map((item) => (
+          <View key={item.label} style={styles.legendItem}>
+            <View
+              style={[styles.legendColor, { backgroundColor: item.color }]}
+            />
+            <Text style={styles.legendText}>
+              {item.label} - {item.value}%
             </Text>
           </View>
         ))}
-      </View> */}
+      </View>
     </View>
   );
 };
 
-export default Chart;
+// Styles
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+  },
+  legendContainer: {
+    marginLeft: 20,
+  },
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  legendColor: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 8,
+  },
+  legendText: {
+    fontSize: 14,
+  },
+});
+
+export default DonutChartCustom;
