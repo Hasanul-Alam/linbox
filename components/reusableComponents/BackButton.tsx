@@ -7,7 +7,7 @@ const BackButton = ({ bgColor }: any) => {
   const router = useRouter();
   return (
     <TouchableOpacity
-      className={`${bgColor ? bgColor : "bg-white"} w-[35px] h-[35px] border border-[#dbdbdb] rounded-full flex items-center justify-center`}
+      className={`${bgColor ? bgColor : "bg-white"} w-[35px] h-[35px] border border-gray-400 rounded-full flex items-center justify-center`}
       onPress={() => router.back()}
     >
       <Ionicons name="chevron-back" size={20} color="black" />
