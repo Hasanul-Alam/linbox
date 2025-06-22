@@ -531,7 +531,7 @@ export default function Inbox() {
                 }}
               >
                 <Text
-                  style={{ fontSize: 12, color: "white", fontWeight: "600" }}
+                  style={{ fontSize: 12, color: "black", fontWeight: "600" }}
                 >
                   {contact?.unreadMessagesCount > 9
                     ? "9+"
@@ -586,14 +586,16 @@ export default function Inbox() {
           )}
 
           {/* Search Bar */}
-          <SearchBar
-            theme={theme}
-            searchText={searchText}
-            searchLoading={searchLoading}
-            animation={animation}
-            onSearchChange={handleSearchChange}
-            onClose={toggleSearch}
-          />
+          {showSearchBar && (
+            <SearchBar
+              theme={theme}
+              searchText={searchText}
+              searchLoading={searchLoading}
+              animation={animation}
+              onSearchChange={handleSearchChange}
+              onClose={toggleSearch}
+            />
+          )}
         </View>
 
         {/* Contact List */}

@@ -95,7 +95,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
           placeholderTextColor={theme === "dark" ? "#8596A0" : "#667781"}
           value={searchText}
           onChangeText={onSearchChange}
-          autoFocus={true}
         />
         {searchLoading ? (
           <ActivityIndicator

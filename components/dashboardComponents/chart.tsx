@@ -4,12 +4,11 @@ import { StyleSheet, Text, View } from "react-native";
 import Svg, { Circle, G, Path } from "react-native-svg";
 
 // Constants
-const CHART_SIZE = 180;
+const CHART_SIZE = 150; // reduced from 180
 const RADIUS = CHART_SIZE / 2;
-const INNER_RADIUS = 50;
-const CENTER_CIRCLE_RADIUS = INNER_RADIUS - 5;
+const INNER_RADIUS = 40;
+const CENTER_CIRCLE_RADIUS = INNER_RADIUS - 4;
 
-// Chart data
 const DATA = [
   { label: "Sent", value: 60.6, color: "#2ECC71" },
   { label: "Delivered", value: 26.4, color: "#6A5ACD" },
@@ -18,25 +17,21 @@ const DATA = [
 ] as const;
 
 const DonutChartCustom = () => {
-  // Generate pie chart segments
   const pieData = d3Shape
     .pie()
     .value((d: any) => d.value)
-    .padAngle(0.03)(DATA); // Add small spacing between segments
+    .padAngle(0.02)(DATA);
 
-  // Arc generator for chart segments
   const arcGenerator = d3Shape
     .arc()
     .outerRadius(RADIUS)
     .innerRadius(INNER_RADIUS)
-    .cornerRadius(5); // Rounded corners for segments
+    .cornerRadius(4);
 
   return (
     <View style={styles.container}>
-      {/* Chart SVG */}
       <Svg width={CHART_SIZE} height={CHART_SIZE}>
         <G x={RADIUS} y={RADIUS}>
-          {/* Render each segment */}
           {/* @ts-ignore */}
           {pieData.map((slice, index) => (
             <Path
@@ -45,12 +40,10 @@ const DonutChartCustom = () => {
               fill={DATA[index].color}
             />
           ))}
-          {/* Center circle (donut hole) */}
           <Circle cx={0} cy={0} r={CENTER_CIRCLE_RADIUS} fill="#fff" />
         </G>
       </Svg>
 
-      {/* Legend */}
       <View style={styles.legendContainer}>
         {DATA.map((item) => (
           <View key={item.label} style={styles.legendItem}>
@@ -67,26 +60,25 @@ const DonutChartCustom = () => {
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
+    paddingVertical: 6,
   },
   legendContainer: {
-    marginLeft: 20,
+    marginLeft: 12,
   },
   legendItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 6,
   },
   legendColor: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 8,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 6,
   },
   legendText: {
     fontSize: 14,

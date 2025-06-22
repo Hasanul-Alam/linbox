@@ -96,7 +96,7 @@ const renderCard: ListRenderItem<(typeof cardTitles)[0]> = ({
 );
 
 const DashboardScreen = () => (
-  <View className="w-[90%] mx-auto pb-10">
+  <View className="w-[90%] mx-auto pb-10 pt-2">
     {/* Header Card */}
     <View
       className={`w-full h-[120px] rounded-2xl mx-auto bg-white mt-6 border border-gray-200`}

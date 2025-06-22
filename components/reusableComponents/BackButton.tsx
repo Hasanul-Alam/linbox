@@ -3,11 +3,11 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 
-const BackButton = () => {
+const BackButton = ({ bgColor }: any) => {
   const router = useRouter();
   return (
     <TouchableOpacity
-      className="bg-white w-[35px] h-[35px] border border-[#dbdbdb] rounded-full flex items-center justify-center"
+      className={`${bgColor ? bgColor : "bg-white"} w-[35px] h-[35px] border border-[#dbdbdb] rounded-full flex items-center justify-center`}
       onPress={() => router.back()}
     >
       <Ionicons name="chevron-back" size={20} color="black" />

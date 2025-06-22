@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Headset, Home, MessageCircle, User } from "lucide-react-native";
+import { Headset, Home, MessageCircle } from "lucide-react-native";
 import { StyleSheet, View } from "react-native";
 
 export default function RootLayout() {
@@ -56,35 +56,53 @@ export default function RootLayout() {
             headerShown: false,
 
             tabBarIcon: ({ focused }) => (
-              <View style={styles.tabItem}>
-                <MessageCircle
-                  size={24}
-                  color={focused ? "#22c065" : "#8E8E93"}
-                />
+              <View
+                style={styles.tabItem}
+                className={
+                  focused
+                    ? "bg-[#f1f1f1] w-[45px] h-[45px] rounded-full"
+                    : undefined
+                }
+              >
+                <MessageCircle size={24} color={focused ? "#000" : "#8E8E93"} />
               </View>
             ),
           }}
         />
 
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="profile"
           options={{
             headerShown: false,
             tabBarIcon: ({ focused }) => (
-              <View style={styles.tabItem}>
-                <User size={24} color={focused ? "#22c065" : "#8E8E93"} />
+              <View
+                style={styles.tabItem}
+                className={
+                  focused
+                    ? "bg-[#f1f1f1] w-[45px] h-[45px] rounded-full"
+                    : undefined
+                }
+              >
+                <User size={24} color={focused ? "#000" : "#8E8E93"} />
               </View>
             ),
           }}
-        />
+        /> */}
 
         <Tabs.Screen
           name="liveChat"
           options={{
             headerShown: false,
             tabBarIcon: ({ focused }) => (
-              <View style={styles.tabItem}>
-                <Headset size={24} color={focused ? "#22c065" : "#8E8E93"} />
+              <View
+                style={styles.tabItem}
+                className={
+                  focused
+                    ? "bg-[#f1f1f1] w-[45px] h-[45px] rounded-full"
+                    : undefined
+                }
+              >
+                <Headset size={24} color={focused ? "#000" : "#8E8E93"} />
               </View>
             ),
           }}

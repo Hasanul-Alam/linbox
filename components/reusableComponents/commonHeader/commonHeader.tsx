@@ -84,7 +84,7 @@ const CommonHeader = () => {
           activeOpacity={0.8}
           onPress={toggleWorkspacePopup}
           onLayout={onHeaderLayout}
-          className="flex-row items-center px-4 py-2 rounded-full border border-gray-200 gap-3"
+          className="flex-row items-center bg-[#f9f8fd] px-1 py-1 rounded-full border border-gray-200 gap-3"
         >
           <View className="w-[30px] h-[30px] overflow-hidden">
             <Image
