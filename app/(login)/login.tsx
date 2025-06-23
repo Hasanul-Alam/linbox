@@ -1,12 +1,20 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const Login = () => {
   const router = useRouter();
 
   return (
     <View className="flex-1 bg-white">
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
       {/* Top content (e.g., logo or animation) */}
       <View className="flex-1 items-center justify-center"></View>
       <View className="mb-10 px-5">

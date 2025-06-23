@@ -1,5 +1,6 @@
 import SearchBar from "@/components/inboxComponents/searchBar";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import { Pin } from "lucide-react-native";
 import React, { useRef, useState } from "react";
 import {
@@ -328,6 +329,7 @@ export default function Inbox() {
   const [theme] = useState("light");
 
   const animation = useRef(new Animated.Value(0)).current;
+  const router = useRouter();
 
   const toggleSearch = () => {
     if (showSearchBar) {
@@ -398,10 +400,6 @@ export default function Inbox() {
     }
   };
 
-  const handleMessageDetails = (contact: any) => {
-    console.log(contact);
-  };
-
   const handleSearchChange = (text: string) => {
     setSearchText(text);
     if (text.length > 0) {
@@ -434,12 +432,19 @@ export default function Inbox() {
     return "#BDC3C7";
   };
 
+  const handleNavigateToChatScreen = (contactData?: any) => {
+    router.push({
+      pathname: "/screens/chatScreens/chatScreen",
+      params: contactData,
+    });
+  };
+
   const renderItem = ({ item: contact }: any) => {
     const backgroundColor = getBackgroundColor(contact?.name.charAt(0));
 
     return (
       <Pressable
-        onPress={() => handleMessageDetails(contact)}
+        onPress={() => handleNavigateToChatScreen(contact)}
         style={{ paddingRight: 12 }}
       >
         <View
@@ -557,6 +562,7 @@ export default function Inbox() {
           flex: 1,
           backgroundColor: theme === "dark" ? "#1F2C34" : "#fff",
         }}
+        className="pb-12"
       >
         {/* Header */}
         <View
