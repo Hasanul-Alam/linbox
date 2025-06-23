@@ -9,7 +9,14 @@ import {
   View,
 } from "react-native";
 
-const options = ["View Profile", "Mute", "Block"];
+const options = [
+  "View Profile",
+  "Set a Label",
+  "Pin Contact",
+  "Tags",
+  "Groups",
+  "Notes",
+];
 
 export default function CustomizedActionSheet({
   visible,
@@ -30,7 +37,7 @@ export default function CustomizedActionSheet({
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <View className="flex-1 bg-black/10">
+        <View className="flex-1 bg-transparent">
           <View
             style={[
               styles.dropdown,

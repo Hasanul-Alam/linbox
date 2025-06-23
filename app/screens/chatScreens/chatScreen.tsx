@@ -1,4 +1,5 @@
-import CustomizedActionSheet from "@/components/reusableComponents/customizedActionSheet/customizedActionSheet";
+import CustomizedActionSheet from "@/components/inboxComponents/customizedActionSheet";
+import TranslationSettingsPopup from "@/components/inboxComponents/translationSettingsPopup";
 import {
   Entypo,
   Feather,
@@ -29,6 +30,8 @@ const ChatScreen = () => {
   const timerBar = useRef(new Animated.Value(100)).current;
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [anchorPosition, setAnchorPosition] = useState({ x: 0, y: 10 });
+  const [isTranslationPopupVisible, setTranslationPopupVisible] =
+    useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const params = useLocalSearchParams();
   const { name, whatsappNumber } = params;
@@ -71,6 +74,49 @@ const ChatScreen = () => {
     else if (index === 2) alert("Block");
   };
 
+  const renderStatusIcon = (status: string) => {
+    switch (status) {
+      case "sent":
+        return (
+          <Feather
+            name="check"
+            size={14}
+            color="#888"
+            style={{ marginLeft: 4 }}
+          />
+        );
+      case "delivered":
+        return (
+          <MaterialCommunityIcons
+            name="check-all"
+            size={14}
+            color="#888"
+            style={{ marginLeft: 4 }}
+          />
+        );
+      case "read":
+        return (
+          <MaterialCommunityIcons
+            name="check-all"
+            size={14}
+            color="#22c065" // blue
+            style={{ marginLeft: 4 }}
+          />
+        );
+      case "failed":
+        return (
+          <Feather
+            name="alert-circle"
+            size={14}
+            color="red"
+            style={{ marginLeft: 4 }}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   const currentContact = {
     id: "1",
     name: typeof name === "string" ? name : "",
@@ -88,6 +134,7 @@ const ChatScreen = () => {
       text: "Hey there! How are you doing?",
       fromContact: true,
       time: "10:30 AM",
+      status: "read", // Example status
     },
     {
       id: 2,
@@ -95,6 +142,7 @@ const ChatScreen = () => {
       text: "I'm good, thanks! How about you?",
       fromContact: false,
       time: "10:32 AM",
+      status: "read", // Example status
     },
     {
       id: 245,
@@ -102,6 +150,7 @@ const ChatScreen = () => {
       text: "I'm good, thanks! How about you?",
       fromContact: false,
       time: "10:32 AM",
+      status: "read", // Example status
     },
     {
       id: 278,
@@ -109,6 +158,7 @@ const ChatScreen = () => {
       text: "I'm good, thanks! How about you?",
       fromContact: false,
       time: "10:32 AM",
+      status: "read", // Example status
     },
     {
       id: 289,
@@ -116,6 +166,7 @@ const ChatScreen = () => {
       text: "I'm good, thanks! How about you?",
       fromContact: false,
       time: "10:32 AM",
+      status: "read", // Example status
     },
     {
       id: 3,
@@ -124,6 +175,7 @@ const ChatScreen = () => {
       text: "Check out this view!",
       fromContact: true,
       time: "10:33 AM",
+      status: "delivered", // Example status
     },
     {
       id: 4,
@@ -133,6 +185,7 @@ const ChatScreen = () => {
       text: "Here's the schedule.",
       fromContact: false,
       time: "10:34 AM",
+      status: "sent", // Example status
     },
     {
       id: 5,
@@ -140,6 +193,15 @@ const ChatScreen = () => {
       text: "Perfect! Thanks.",
       fromContact: false,
       time: "10:35 AM",
+      status: "sent", // Example status
+    },
+    {
+      id: 6,
+      type: "text",
+      text: "Okk then. See you later!",
+      fromContact: false,
+      time: "10:35 AM",
+      status: "failed", // Example status
     },
   ];
 
@@ -192,7 +254,9 @@ const ChatScreen = () => {
               </View>
               <View className="flex-row items-center gap-2">
                 <Text className="text-sm">{formatTime(remainingTime)}</Text>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setTranslationPopupVisible(true)}
+                >
                   <Ionicons name="language-outline" size={18} />
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -214,7 +278,7 @@ const ChatScreen = () => {
           {/* Timer Bar */}
           <View className="mt-1 w-full h-1 bg-gray-200">
             <Animated.View
-              className="h-full bg-green-500"
+              className="h-full bg-primary"
               style={{
                 width: timerBar.interpolate({
                   inputRange: [0, 100],
@@ -227,7 +291,7 @@ const ChatScreen = () => {
           {/* Messages */}
           <ScrollView
             ref={scrollViewRef}
-            className="flex-1 px-3"
+            className="flex-1 px-3 mt-3"
             contentContainerStyle={{ paddingBottom: 10 }}
             onContentSizeChange={() =>
               scrollViewRef.current?.scrollToEnd({ animated: true })
@@ -235,70 +299,77 @@ const ChatScreen = () => {
             keyboardDismissMode="interactive"
           >
             {messages.map((msg) => {
-              const containerStyle = msg.fromContact
-                ? "bg-gray-100 self-start rounded-bl-sm"
-                : "bg-[#DCF8C6] self-end rounded-br-sm";
+              const isFromContact = msg.fromContact;
+              const bubbleAlign = isFromContact ? "self-start" : "self-end";
+              const bubbleBg = isFromContact ? "bg-gray-100" : "bg-[#a3e5b4]";
+              const timeAlign = isFromContact ? "self-start" : "self-end";
 
               return (
-                <View
-                  key={msg.id}
-                  className={`max-w-[80%] p-3 rounded-xl my-2 ${containerStyle}`}
-                >
-                  {/* Text */}
-                  {msg.type === "text" && (
-                    <Text className="text-base">{msg.text}</Text>
-                  )}
+                <View key={msg.id} className="mb-5">
+                  {/* Message bubble */}
+                  <View
+                    className={`max-w-[80%] p-3 rounded-xl ${bubbleBg} ${bubbleAlign}`}
+                  >
+                    {/* Text */}
+                    {msg.type === "text" && (
+                      <Text className="text-base">{msg.text}</Text>
+                    )}
 
-                  {/* Image */}
-                  {msg.type === "image" && (
-                    <>
-                      <TouchableOpacity
-                        onPress={() => setPreviewImage(msg.imageUrl ?? null)}
-                        activeOpacity={0.9}
-                      >
-                        <Image
-                          source={{ uri: msg.imageUrl }}
-                          className="w-48 h-48 rounded-md mb-2"
-                          resizeMode="cover"
-                        />
-                      </TouchableOpacity>
-                      {msg.text && (
-                        <Text className="text-base mt-1">{msg.text}</Text>
-                      )}
-                    </>
-                  )}
-
-                  {/* Document */}
-                  {msg.type === "document" && (
-                    <>
-                      <View className="flex-row items-center justify-between bg-white border border-gray-300 rounded-md p-2">
-                        <View className="flex-row items-center gap-2">
-                          <Feather name="file-text" size={20} color="#555" />
-                          <View>
-                            <Text className="text-sm font-medium">
-                              {msg.fileName}
-                            </Text>
-                            <Text className="text-xs text-gray-500">
-                              {msg.fileSize}
-                            </Text>
-                          </View>
-                        </View>
+                    {/* Image */}
+                    {msg.type === "image" && (
+                      <>
                         <TouchableOpacity
-                          onPress={() => alert("Download started")}
+                          onPress={() => setPreviewImage(msg.imageUrl ?? null)}
+                          activeOpacity={0.9}
                         >
-                          <Feather name="download" size={20} color="#333" />
+                          <Image
+                            source={{ uri: msg.imageUrl }}
+                            className="w-48 h-48 rounded-md mb-2"
+                            resizeMode="cover"
+                          />
                         </TouchableOpacity>
-                      </View>
-                      {msg.text && (
-                        <Text className="text-base mt-1">{msg.text}</Text>
-                      )}
-                    </>
-                  )}
+                        {msg.text && (
+                          <Text className="text-base mt-1">{msg.text}</Text>
+                        )}
+                      </>
+                    )}
 
-                  {/* Timestamp */}
-                  <Text className="text-xs text-gray-600 self-end mt-1">
-                    {msg.time}
-                  </Text>
+                    {/* Document */}
+                    {msg.type === "document" && (
+                      <>
+                        <View className="flex-row items-center justify-between bg-white border border-gray-300 rounded-md p-2">
+                          <View className="flex-row items-center gap-2">
+                            <Feather name="file-text" size={20} color="#555" />
+                            <View>
+                              <Text className="text-sm font-medium">
+                                {msg.fileName}
+                              </Text>
+                              <Text className="text-xs text-gray-500">
+                                {msg.fileSize}
+                              </Text>
+                            </View>
+                          </View>
+                          <TouchableOpacity
+                            onPress={() => alert("Download started")}
+                          >
+                            <Feather name="download" size={20} color="#333" />
+                          </TouchableOpacity>
+                        </View>
+                        {msg.text && (
+                          <Text className="text-base mt-1">{msg.text}</Text>
+                        )}
+                      </>
+                    )}
+                  </View>
+
+                  {/* Time + Status */}
+
+                  <View
+                    className={`flex-row items-center gap-1 mt-1 px-1 ${timeAlign}`}
+                  >
+                    <Text className="text-xs text-gray-500">{msg.time}</Text>
+                    {renderStatusIcon(msg.status)}
+                  </View>
                 </View>
               );
             })}
@@ -339,6 +410,13 @@ const ChatScreen = () => {
           onClose={() => setShowOptions(false)}
           onOptionSelect={handleOptionSelect}
           anchorPosition={anchorPosition}
+        />
+      )}
+
+      {isTranslationPopupVisible && (
+        <TranslationSettingsPopup
+          visible={isTranslationPopupVisible}
+          onClose={() => setTranslationPopupVisible(false)}
         />
       )}
 
