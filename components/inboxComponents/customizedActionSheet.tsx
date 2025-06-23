@@ -10,12 +10,30 @@ import {
 } from "react-native";
 
 const options = [
-  "View Profile",
-  "Set a Label",
-  "Pin Contact",
-  "Tags",
-  "Groups",
-  "Notes",
+  {
+    label: "View Profile",
+    value: "view_profile",
+  },
+  {
+    label: "Set a Label",
+    value: "set_label",
+  },
+  {
+    label: "Pin Contact",
+    value: "pin_contact",
+  },
+  {
+    label: "Tags",
+    value: "tags",
+  },
+  {
+    label: "Groups",
+    value: "groups",
+  },
+  {
+    label: "Notes",
+    value: "notes",
+  },
 ];
 
 export default function CustomizedActionSheet({
@@ -26,7 +44,7 @@ export default function CustomizedActionSheet({
 }: {
   visible: boolean;
   onClose: () => void;
-  onOptionSelect: (index: number) => void;
+  onOptionSelect: (value: string) => void;
   anchorPosition?: { x: number; y: number };
 }) {
   return (
@@ -55,16 +73,12 @@ export default function CustomizedActionSheet({
                   index !== options.length - 1 ? "border-b border-gray-200" : ""
                 }`}
                 onPress={() => {
-                  onOptionSelect(index);
+                  onOptionSelect(option.value);
                   onClose();
                 }}
               >
-                <Text
-                  className={`text-base ${
-                    option === "Block" ? "text-red-500" : "text-gray-800"
-                  }`}
-                >
-                  {option}
+                <Text className={`text-base text-gray-800`}>
+                  {option.label}
                 </Text>
               </TouchableOpacity>
             ))}

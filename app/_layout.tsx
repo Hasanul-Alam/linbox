@@ -38,6 +38,10 @@ export default function RootLayout() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="screens/contactProfileScreens/contactProfileScreen"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="screens/customerSignIn"
           options={{ headerShown: false }}
         />

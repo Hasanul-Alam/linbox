@@ -68,10 +68,19 @@ const ChatScreen = () => {
     return `${h}:${m}:${s}`;
   };
 
-  const handleOptionSelect = (index: number) => {
-    if (index === 0) alert("View Profile");
-    else if (index === 1) alert("Mute");
-    else if (index === 2) alert("Block");
+  const handleOptionSelect = (value: string) => {
+    if (value === "view_profile") {
+      router.push("/screens/contactProfileScreens/contactProfileScreen");
+      console.log("Profile option selected");
+    } else if (value === "set_label") {
+      console.log("Set label option selected");
+    } else if (value === "pin_contact") {
+      console.log("Pin contact option selected");
+    } else if (value === "tags") {
+      console.log("Tags option selected");
+    } else if (value === "groups") {
+      console.log("Groups option selected");
+    }
   };
 
   const renderStatusIcon = (status: string) => {
