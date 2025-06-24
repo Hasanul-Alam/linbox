@@ -7,6 +7,7 @@ import NoteItem from "./noteItem";
 interface NotesSectionProps {
   theme: "light" | "dark";
   onEditNote: (noteId: number, content: string) => void;
+  onDeleteNote: () => void;
 }
 
 const currentContact = {
@@ -41,7 +42,11 @@ const currentContact = {
   },
 };
 
-const NotesSection = ({ theme, onEditNote }: NotesSectionProps) => {
+const NotesSection = ({
+  theme,
+  onEditNote,
+  onDeleteNote,
+}: NotesSectionProps) => {
   const [addNoteText, setAddNoteText] = useState("");
 
   const handleAddNote = () => {
@@ -75,6 +80,7 @@ const NotesSection = ({ theme, onEditNote }: NotesSectionProps) => {
             theme={theme}
             onEdit={onEditNote}
             onCopy={copyToClipboard}
+            onDelete={onDeleteNote}
           />
         ))
       ) : (

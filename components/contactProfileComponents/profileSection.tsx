@@ -53,7 +53,7 @@ const ProfileSection = ({ theme }: ProfileSectionProps) => {
               className="w-28 h-28 rounded-full"
             />
           ) : (
-            <View className="w-28 h-28 rounded-full bg-primary items-center justify-center shadow-lg">
+            <View className="w-28 h-28 rounded-full bg-primary items-center justify-center">
               <Text className="text-4xl font-semibold text-black">
                 {currentContact.name.charAt(0)}
               </Text>

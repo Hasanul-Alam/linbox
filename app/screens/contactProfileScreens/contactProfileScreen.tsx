@@ -4,6 +4,7 @@ import Header from "@/components/contactProfileComponents/header";
 import NotesSection from "@/components/contactProfileComponents/notesSection";
 import ProfileSection from "@/components/contactProfileComponents/profileSection";
 import TagsSection from "@/components/contactProfileComponents/tagsSection";
+import DeleteModal from "@/components/reusableComponents/deleteModal";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
@@ -15,6 +16,7 @@ const ProfileScreen = () => {
   const [editingNoteId, setEditingNoteId] = useState<number | null>(null);
   const [updateNoteText, setUpdateNoteText] = useState("");
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
+  const [showDeleteNotePopup, setShowDeleteNotePopup] = useState(false);
 
   const handleBack = () => router.back();
 
@@ -41,7 +43,11 @@ const ProfileScreen = () => {
           <ProfileSection theme={theme} />
           <GroupsSection theme={theme} />
           <TagsSection theme={theme} />
-          <NotesSection theme={theme} onEditNote={toggleUpdatePopup} />
+          <NotesSection
+            theme={theme}
+            onEditNote={toggleUpdatePopup}
+            onDeleteNote={showDeleteNotePopup}
+          />
         </ScrollView>
       </SafeAreaView>
 
@@ -56,6 +62,18 @@ const ProfileScreen = () => {
           toggleUpdatePopup();
         }}
       />
+
+      {showDeleteNotePopup && (
+        <DeleteModal
+          visible={showDeleteNotePopup}
+          theme={"light"}
+          itemName="note"
+          onClose={() => setShowDeleteNotePopup(false)}
+          onConfirm={() => {
+            console.log(" Note deleted");
+          }}
+        />
+      )}
     </View>
   );
 };

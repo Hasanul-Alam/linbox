@@ -1,6 +1,7 @@
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import AddGroupModal from "./addGroupModal";
 
 interface GroupsSectionProps {
   theme: "light" | "dark";
@@ -18,6 +19,7 @@ const currentContact = {
 
 const GroupsSection = ({ theme }: GroupsSectionProps) => {
   const [groupsQueryText, setGroupsQueryText] = useState("");
+  const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
 
   const handleAddGroup = () => {
     console.log("Adding group");
@@ -38,7 +40,7 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
           >
             Groups ({currentContact.contactGroups.data.length})
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsAddGroupModalOpen(true)}>
             <Ionicons
               name="add"
               size={24}
@@ -53,10 +55,10 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
             {currentContact.contactGroups.data.map((group) => (
               <View
                 key={group.id}
-                className={`flex-row items-center px-3 py-1.5 rounded-full ${theme === "dark" ? "bg-gray-700" : "bg-indigo-100"}`}
+                className={`flex-row items-center px-3 py-1.5 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-primary/20"}`}
               >
                 <Text
-                  className={`${theme === "dark" ? "text-white" : "text-indigo-800"} mr-1`}
+                  className={`${theme === "dark" ? "text-white" : "text-black"} mr-1`}
                 >
                   {group.name}
                 </Text>
@@ -66,7 +68,7 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
                   <Entypo
                     name="cross"
                     size={16}
-                    color={theme === "dark" ? "#9ca3af" : "#4f46e5"}
+                    color={theme === "dark" ? "#9ca3af" : "green"}
                   />
                 </TouchableOpacity>
               </View>
@@ -88,7 +90,7 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
         )}
 
         {/* Group Search */}
-        <View
+        {/* <View
           className={`mt-2 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"} p-2`}
         >
           <TextInput
@@ -98,7 +100,7 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
             onChangeText={setGroupsQueryText}
             className={`px-3 py-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
           />
-        </View>
+        </View> */}
 
         {/* Search Results (mock) */}
         {groupsQueryText && (
@@ -134,7 +136,15 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
           </View>
         )}
       </View>
+      {/* Divider */}
       <View className="w-full h-[1px] bg-gray-300"></View>
+
+      {isAddGroupModalOpen && (
+        <AddGroupModal
+          visible={isAddGroupModalOpen}
+          onClose={() => setIsAddGroupModalOpen(false)}
+        />
+      )}
     </>
   );
 };
