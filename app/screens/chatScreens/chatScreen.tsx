@@ -1,12 +1,15 @@
 import CustomizedActionSheet from "@/components/inboxComponents/customizedActionSheet";
+import MessageOptionsPopup from "@/components/inboxComponents/messageOptionsPopup";
 import TranslationSettingsPopup from "@/components/inboxComponents/translationSettingsPopup";
 import {
   Entypo,
   Feather,
   Ionicons,
   MaterialCommunityIcons,
+  MaterialIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -27,6 +30,9 @@ const ChatScreen = () => {
   const router = useRouter();
   const [remainingTime, setRemainingTime] = useState(86399);
   const [showOptions, setShowOptions] = useState(false);
+  const [isMessageOptionsVisible, setIsMessageOptionsVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [messageText, setMessageText] = useState("");
   const timerBar = useRef(new Animated.Value(100)).current;
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [anchorPosition, setAnchorPosition] = useState({ x: 0, y: 10 });
@@ -81,6 +87,59 @@ const ChatScreen = () => {
     } else if (value === "groups") {
       console.log("Groups option selected");
     }
+  };
+
+  const handleSendMessage = () => {
+    if (messageText.trim() || selectedImage) {
+      // Here you would normally send the message to your backend
+      console.log("Sending message:", {
+        text: messageText,
+        image: selectedImage,
+      });
+
+      // Clear the input after sending
+      setMessageText("");
+      setSelectedImage(null);
+    }
+  };
+
+  const handleMessageOptionsSelect = async (option: string) => {
+    console.log(`Message option selected: ${option}`);
+
+    if (option === "image") {
+      try {
+        // Request permission
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+          return;
+        }
+
+        // Launch image picker
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 0.7,
+        });
+
+        if (!result.canceled) {
+          setSelectedImage(result.assets[0].uri);
+          // Scroll to bottom when image is selected
+          setTimeout(() => {
+            scrollViewRef.current?.scrollToEnd({ animated: true });
+          }, 100);
+        }
+      } catch (error) {
+        console.log("Error picking image:", error);
+      }
+    }
+  };
+
+  // Add a function to clear the selected image
+  const clearSelectedImage = () => {
+    setSelectedImage(null);
   };
 
   const renderStatusIcon = (status: string) => {
@@ -386,17 +445,39 @@ const ChatScreen = () => {
 
           {/* Input */}
           <View className="border-t border-gray-200 px-4 py-2 bg-white">
+            {/* Image preview (show when image is selected) */}
+            {selectedImage && (
+              <View className="relative mb-2 bg-gray-100 rounded-lg p-2">
+                <Image
+                  source={{ uri: selectedImage }}
+                  className="w-20 h-20 rounded-md"
+                  resizeMode="cover"
+                />
+                <TouchableOpacity
+                  className="absolute -top-2 -right-2 bg-gray-600 rounded-full p-1"
+                  onPress={clearSelectedImage}
+                >
+                  <MaterialIcons name="close" size={16} color="white" />
+                </TouchableOpacity>
+              </View>
+            )}
+
             <View className="flex-row items-center">
               <TouchableOpacity className="p-2">
                 <Entypo name="emoji-happy" size={19} color="#484848" />
               </TouchableOpacity>
-              <TouchableOpacity className="p-2">
+              <TouchableOpacity
+                className="p-2"
+                onPress={() => setIsMessageOptionsVisible(true)}
+              >
                 <Entypo name="plus" size={22} color="#484848" />
               </TouchableOpacity>
               <TextInput
                 className="flex-1 mx-2 py-2 px-4 bg-gray-100 rounded-lg max-h-[80px] overflow-auto"
                 placeholder="Type a message..."
                 placeholderTextColor="#888"
+                value={messageText}
+                onChangeText={setMessageText}
                 onFocus={() => {
                   setTimeout(() => {
                     scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -404,8 +485,18 @@ const ChatScreen = () => {
                 }}
                 multiline={true}
               />
-              <TouchableOpacity className="p-2">
-                <Feather name="send" size={20} color="#484848" />
+              <TouchableOpacity
+                className="p-2"
+                onPress={handleSendMessage}
+                disabled={!messageText.trim() && !selectedImage}
+              >
+                <Feather
+                  name="send"
+                  size={20}
+                  color={
+                    messageText.trim() || selectedImage ? "#22c065" : "#484848"
+                  }
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -426,6 +517,14 @@ const ChatScreen = () => {
         <TranslationSettingsPopup
           visible={isTranslationPopupVisible}
           onClose={() => setTranslationPopupVisible(false)}
+        />
+      )}
+
+      {isMessageOptionsVisible && (
+        <MessageOptionsPopup
+          visible={isMessageOptionsVisible}
+          onClose={() => setIsMessageOptionsVisible(false)}
+          onSelectOption={handleMessageOptionsSelect}
         />
       )}
 

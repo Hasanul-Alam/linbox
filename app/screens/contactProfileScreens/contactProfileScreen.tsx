@@ -7,6 +7,7 @@ import {
   Ionicons,
   Octicons,
 } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   Animated,
@@ -77,9 +78,12 @@ const ProfileScreen = () => {
   const popupScale = new Animated.Value(0);
   const fadeAnim = new Animated.Value(0);
   const profileAnim = new Animated.Value(0);
+  const router = useRouter();
 
   // Mock functions
-  const handleBack = () => {};
+  const handleBack = () => {
+    router.back();
+  };
 
   const copyToClipboard = (name: string) => {
     console.log(`Copied to clipboard: ${name}`);
