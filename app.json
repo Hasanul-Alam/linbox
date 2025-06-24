@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+       "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow Linbox to access your photos to send images in chats."
+      }
     },
     "android": {
       "adaptiveIcon": {
