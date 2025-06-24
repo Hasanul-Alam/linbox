@@ -92,16 +92,14 @@ const CommonHeader = () => {
               className="w-full h-full rounded-full"
             />
           </View>
-          <View className="flex-row items-center">
+          <View className="">
             <Text className="text-base font-semibold text-gray-900">
               Workspace 1
             </Text>
 
             {/* Inline subtitle */}
-            <View className="flex-row items-center ml-3">
-              <Text className="text-xs text-indigo-700 font-medium">
-                Internal
-              </Text>
+            <View className="flex-row">
+              <Text className="text-xs text-primary">Internal</Text>
               {/* <Text className="text-xs text-gray-500 ml-3">5 members</Text> */}
             </View>
           </View>

@@ -1,4 +1,4 @@
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 
@@ -64,19 +64,35 @@ const MessageOptionsPopup: React.FC<MessageOptionsPopupProps> = ({
         {/* Popup container */}
         <View className="bg-white rounded-t-3xl p-6 pb-10">
           {/* Header */}
-          <View className="flex-row justify-between items-center mb-5">
+          {/* <View className="flex-row justify-between items-center mb-5">
             <Text className="text-xl font-bold text-gray-900">
               Message Options
             </Text>
             <TouchableOpacity onPress={onClose}>
               <MaterialIcons name="close" size={26} color="#6b7280" />
             </TouchableOpacity>
-          </View>
+          </View> */}
 
-          {/* Options grid */}
           <View className="flex-row flex-wrap justify-start">
-            {options.map((option) => {
+            {options.map((option, index) => {
               const IconComponent = option.iconComponent;
+
+              // Define vibrant background colors
+              const bgColors = [
+                "bg-green-500",
+                "bg-yellow-400",
+                "bg-red-400",
+                "bg-purple-500",
+                "bg-pink-500",
+                "bg-indigo-500",
+                "bg-orange-400",
+                "bg-emerald-500",
+                "bg-cyan-500",
+              ];
+
+              // Cycle through the colors if more than length
+              const bgColor = bgColors[index % bgColors.length];
+
               return (
                 <TouchableOpacity
                   key={option.id}
@@ -85,16 +101,14 @@ const MessageOptionsPopup: React.FC<MessageOptionsPopupProps> = ({
                     onSelectOption(option.id);
                     onClose();
                   }}
-                  activeOpacity={0.7}
+                  activeOpacity={0.8}
                 >
-                  <View className="bg-blue-100 rounded-full w-16 h-16 items-center justify-center mb-2 shadow-sm shadow-blue-200">
-                    <IconComponent
-                      name={option.icon}
-                      size={24}
-                      color="#2563eb"
-                    />
+                  <View
+                    className={`rounded-full w-16 h-16 items-center justify-center mb-2 shadow-lg ${bgColor}`}
+                  >
+                    <IconComponent name={option.icon} size={26} color="#fff" />
                   </View>
-                  <Text className="text-sm text-gray-700 font-medium">
+                  <Text className="text-sm text-gray-800 font-semibold text-center">
                     {option.label}
                   </Text>
                 </TouchableOpacity>

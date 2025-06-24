@@ -48,6 +48,14 @@ const iconBackgroundColors = [
   "#ec4899", // pink
   "#0ea5e9", // sky blue
 ];
+// const iconBackgroundColors = [
+//   "#22c065", // purple
+//   "#22c065", // teal
+//   "#22c065", // blue
+//   "#22c065", // orange
+//   "#22c065", // pink
+//   "#22c065", // sky blue
+// ];
 
 // Render each dashboard card
 const renderCard: ListRenderItem<(typeof cardTitles)[0]> = ({

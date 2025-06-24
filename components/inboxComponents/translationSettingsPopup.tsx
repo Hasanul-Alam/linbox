@@ -1,3 +1,4 @@
+import { FontAwesome6 } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
   FlatList,
@@ -163,6 +164,7 @@ const TranslationSettingsPopup = ({
       transparent
       animationType="slide"
       onRequestClose={onClose}
+      className=""
     >
       <View className="flex-1 justify-end bg-black/20">
         <TouchableOpacity
@@ -180,17 +182,19 @@ const TranslationSettingsPopup = ({
           <Text className="text-sm font-semibold text-gray-600 mb-2">
             Prospect Messages
           </Text>
-          <View className="flex-row justify-between mb-4">
+          <View className="flex-row justify-between mb-4 items-center gap-2">
             <TouchableOpacity
-              className="bg-gray-100 rounded-lg p-3 w-[48%]"
+              className="bg-gray-100 rounded-lg p-3 w-[45%]"
               onPress={() => openDropdown("prospectFrom")}
             >
               <Text className="text-gray-800">
                 {prospectFrom || "Select..."}
               </Text>
             </TouchableOpacity>
+            {/* Arrow */}
+            <FontAwesome6 name="arrow-right" size={15} color="#6b7280" />
             <TouchableOpacity
-              className="bg-gray-100 rounded-lg p-3 w-[48%]"
+              className="bg-gray-100 rounded-lg p-3 w-[45%]"
               onPress={() => openDropdown("prospectTo")}
             >
               <Text className="text-gray-800">{prospectTo || "Select..."}</Text>
@@ -211,15 +215,17 @@ const TranslationSettingsPopup = ({
           <Text className="text-sm font-semibold text-gray-600 mb-2">
             Your Messages
           </Text>
-          <View className="flex-row justify-between mb-4">
+          <View className="flex-row justify-between mb-4 items-center gap-2">
             <TouchableOpacity
-              className="bg-gray-100 rounded-lg p-3 w-[48%]"
+              className="bg-gray-100 rounded-lg p-3 w-[45%]"
               onPress={() => openDropdown("yourFrom")}
             >
               <Text className="text-gray-800">{yourFrom || "Select..."}</Text>
             </TouchableOpacity>
+            {/* Arrow */}
+            <FontAwesome6 name="arrow-right" size={15} color="#6b7280" />
             <TouchableOpacity
-              className="bg-gray-100 rounded-lg p-3 w-[48%]"
+              className="bg-gray-100 rounded-lg p-3 w-[45%]"
               onPress={() => openDropdown("yourTo")}
             >
               <Text className="text-gray-800">{yourTo || "Select..."}</Text>
