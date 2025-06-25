@@ -117,7 +117,7 @@ const DashboardScreen = () => (
       // }}
     >
       <View className="flex flex-row justify-between w-[90%] mx-auto mt-3">
-        <View>
+        <View className="">
           <Text className="text-black text-2xl font-semibold">Workspace 1</Text>
           <Text className="text-black text-lg font-semibold">Internal</Text>
         </View>

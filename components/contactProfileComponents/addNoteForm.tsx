@@ -15,20 +15,20 @@ const AddNoteForm = ({
 }: AddNoteFormProps) => {
   return (
     <View
-      className={`p-4 rounded-xl ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"} shadow-sm`}
+      className={`px-3 pb-3 rounded-xl ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}
     >
-      <Text
+      {/* <Text
         className={`font-medium mb-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
       >
         Add a note
-      </Text>
+      </Text> */}
       <TextInput
-        placeholder="Type your note here..."
+        placeholder="Type here to add a note..."
         placeholderTextColor={theme === "dark" ? "#6b7280" : "#9ca3af"}
         multiline
         value={noteText}
         onChangeText={onTextChange}
-        className={`min-h-[80px] ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+        className={` ${theme === "dark" ? "text-white" : "text-gray-900"}`}
       />
       <View className="flex-row justify-end mt-3">
         <TouchableOpacity

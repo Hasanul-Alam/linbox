@@ -92,7 +92,7 @@ const CommonHeader = () => {
               className="w-full h-full rounded-full"
             />
           </View>
-          <View className="">
+          <View className=" flex-row items-center gap-2">
             <Text className="text-base font-semibold text-gray-900">
               Workspace 1
             </Text>

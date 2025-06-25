@@ -34,6 +34,10 @@ const ProfileScreen = () => {
     }
   };
 
+  const toggleDeleteNotePopup = () => {
+    setShowDeleteNotePopup(!showDeleteNotePopup);
+  };
+
   return (
     <View className={`flex-1 ${theme === "dark" ? "bg-gray-900" : "bg-white"}`}>
       <SafeAreaView className="flex-1">
@@ -46,7 +50,7 @@ const ProfileScreen = () => {
           <NotesSection
             theme={theme}
             onEditNote={toggleUpdatePopup}
-            onDeleteNote={showDeleteNotePopup}
+            onDeleteNote={toggleDeleteNotePopup}
           />
         </ScrollView>
       </SafeAreaView>
@@ -71,6 +75,7 @@ const ProfileScreen = () => {
           onClose={() => setShowDeleteNotePopup(false)}
           onConfirm={() => {
             console.log(" Note deleted");
+            toggleDeleteNotePopup();
           }}
         />
       )}

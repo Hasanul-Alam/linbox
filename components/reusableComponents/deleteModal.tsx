@@ -66,27 +66,26 @@ const DeleteModal = ({
       <Pressable className="absolute inset-0 bg-black/50" onPress={onClose} />
 
       <Animated.View
-        className={`w-11/12 rounded-xl ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}
+        className={`w-[50%] rounded-xl ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}
         style={{ transform: [{ scale: popupScale }] }}
       >
         <Pressable onPress={(e) => e.stopPropagation()}>
           <View className="p-6">
-            <Text
+            {/* <Text
               className={`text-xl font-bold mb-4 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
             >
               Confirm Delete
-            </Text>
+            </Text> */}
 
             <Text
               className={`text-base mb-6 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}
             >
-              Are you sure you want to delete {itemName}? This action cannot be
-              undone.
+              Are you sure you want to delete this {itemName}?
             </Text>
 
-            <View className="flex-row justify-end gap-3">
+            <View className="flex-row justify-between gap-3">
               <TouchableOpacity
-                className={`px-5 py-2.5 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-gray-200"}`}
+                className={`px-5 py-2.5 rounded-full ${theme === "dark" ? "bg-gray-700" : "bg-gray-200"}`}
                 onPress={onClose}
               >
                 <Text
@@ -97,7 +96,7 @@ const DeleteModal = ({
               </TouchableOpacity>
 
               <TouchableOpacity
-                className="px-5 py-2.5 bg-red-600 rounded-lg"
+                className="px-5 py-2.5 bg-red-600 rounded-full"
                 onPress={onConfirm}
               >
                 <Text className="text-white font-medium">Delete</Text>

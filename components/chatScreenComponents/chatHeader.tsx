@@ -29,16 +29,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   onTranslationPress,
   onOptionsPress,
 }) => {
-  //   const formatTime = (seconds: number) => {
-  //     const h = Math.floor(seconds / 3600)
-  //       .toString()
-  //       .padStart(2, "0");
-  //     const m = Math.floor((seconds % 3600) / 60)
-  //       .toString()
-  //       .padStart(2, "0");
-  //     const s = (seconds % 60).toString().padStart(2, "0");
-  //     return `${h}:${m}:${s}`;
-  //   };
   return (
     <View className="w-[95%] mx-auto mb-2">
       <View className="flex-row items-center justify-between">

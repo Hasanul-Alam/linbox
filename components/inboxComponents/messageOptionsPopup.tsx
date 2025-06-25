@@ -63,31 +63,21 @@ const MessageOptionsPopup: React.FC<MessageOptionsPopupProps> = ({
       >
         {/* Popup container */}
         <View className="bg-white rounded-t-3xl p-6 pb-10">
-          {/* Header */}
-          {/* <View className="flex-row justify-between items-center mb-5">
-            <Text className="text-xl font-bold text-gray-900">
-              Message Options
-            </Text>
-            <TouchableOpacity onPress={onClose}>
-              <MaterialIcons name="close" size={26} color="#6b7280" />
-            </TouchableOpacity>
-          </View> */}
-
           <View className="flex-row flex-wrap justify-start">
             {options.map((option, index) => {
               const IconComponent = option.iconComponent;
 
               // Define vibrant background colors
               const bgColors = [
-                "bg-green-500",
-                "bg-yellow-400",
-                "bg-red-400",
-                "bg-purple-500",
-                "bg-pink-500",
-                "bg-indigo-500",
-                "bg-orange-400",
-                "bg-emerald-500",
-                "bg-cyan-500",
+                "#10b981",
+                "#facc15",
+                "#f87171",
+                "#a855f7",
+                "#ec4899",
+                "#6366f1",
+                "#fb923c",
+                "#10b981",
+                "#06b6d4",
               ];
 
               // Cycle through the colors if more than length
@@ -104,9 +94,13 @@ const MessageOptionsPopup: React.FC<MessageOptionsPopupProps> = ({
                   activeOpacity={0.8}
                 >
                   <View
-                    className={`rounded-full w-16 h-16 items-center justify-center mb-2 shadow-lg ${bgColor}`}
+                    className={`rounded-full w-16 h-16 items-center justify-center mb-2 border border-gray-200`}
                   >
-                    <IconComponent name={option.icon} size={26} color="#fff" />
+                    <IconComponent
+                      name={option.icon}
+                      size={26}
+                      color={bgColor}
+                    />
                   </View>
                   <Text className="text-sm text-gray-800 font-semibold text-center">
                     {option.label}
