@@ -48,14 +48,6 @@ const iconBackgroundColors = [
   "#ec4899", // pink
   "#0ea5e9", // sky blue
 ];
-// const iconBackgroundColors = [
-//   "#22c065", // purple
-//   "#22c065", // teal
-//   "#22c065", // blue
-//   "#22c065", // orange
-//   "#22c065", // pink
-//   "#22c065", // sky blue
-// ];
 
 // Render each dashboard card
 const renderCard: ListRenderItem<(typeof cardTitles)[0]> = ({
@@ -68,16 +60,6 @@ const renderCard: ListRenderItem<(typeof cardTitles)[0]> = ({
       width: "48%",
       marginRight: index % 2 === 0 ? "4%" : 0,
       backgroundColor: "white",
-      // shadowColor: "#000",
-      // shadowOffset: {
-      //   width: 0,
-      //   height: 2,
-      // },
-      // shadowOpacity: 0.1,
-      // shadowRadius: 4,
-      // elevation: 3,
-      // borderWidth: 1,
-      // borderColor: "#f3f4f6", // subtle border
     }}
   >
     <View className="flex-row justify-between w-[85%] mx-auto my-3">
@@ -103,18 +85,11 @@ const renderCard: ListRenderItem<(typeof cardTitles)[0]> = ({
   </View>
 );
 
-const DashboardScreen = () => (
+const DashboardScreen = ({ dashboardData, messageAnalytics }: any) => (
   <View className="w-[90%] mx-auto pb-10 pt-2">
     {/* Header Card */}
     <View
       className={`w-full h-[120px] rounded-2xl mx-auto bg-white mt-6 border border-gray-200`}
-      // style={{
-      //   shadowColor: "#8b5cf6",
-      //   shadowOffset: { width: 0, height: 4 },
-      //   shadowOpacity: 0.3,
-      //   shadowRadius: 6,
-      //   elevation: 8,
-      // }}
     >
       <View className="flex flex-row justify-between w-[90%] mx-auto mt-3">
         <View className="">
@@ -152,7 +127,7 @@ const DashboardScreen = () => (
     <View className="mt-6 mb-20">
       <Text className="text-xl font-bold text-gray-800 mb-3">Quick Status</Text>
       <View className="bg-white p-4 rounded-xl border border-gray-200">
-        <Chart />
+        <Chart messageAnalytics={messageAnalytics} />
       </View>
     </View>
   </View>
