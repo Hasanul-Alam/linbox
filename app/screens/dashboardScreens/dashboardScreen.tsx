@@ -1,3 +1,4 @@
+import DashboardSkeleton from "@/app/skeletons/dashboardSkeleton";
 import Chart from "@/components/dashboardComponents/chart";
 import ProgressBar from "@/components/reusableComponents/progressBar/progressBar";
 import {
@@ -95,7 +96,7 @@ const renderCard: ListRenderItem<ReturnType<typeof createCardData>[0]> = ({
   );
 };
 
-const DashboardScreen = ({ dashboardData, messageAnalytics }: any) => {
+const DashboardScreen = ({ dashboardData, messageAnalytics, loading }: any) => {
   // Create card data from the dashboardData prop
   const cardData = createCardData(dashboardData);
 
@@ -105,6 +106,11 @@ const DashboardScreen = ({ dashboardData, messageAnalytics }: any) => {
         dashboardData.counts.workspaces.limit) *
       100
     : 0;
+
+  // Show loading skeleton if loading
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <View className="w-[90%] mx-auto pb-10 pt-2">

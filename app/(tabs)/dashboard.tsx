@@ -87,6 +87,7 @@ const Dashboard = () => {
           <DashboardScreen
             dashboardData={dashboardData}
             messageAnalytics={messageAnalytics}
+            loading={isLoading}
           />
         </ScrollView>
       </KeyboardAvoidingView>
