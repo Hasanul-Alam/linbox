@@ -1,5 +1,6 @@
+import axiosInstance from "@/utils/axiosInstance";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Pressable,
@@ -26,10 +27,34 @@ const fakeTags = [
 const AddTagModal = ({
   visible,
   onClose,
+  contactId, // Assuming contactId is passed to fetch available tags
 }: {
   visible: boolean;
   onClose: () => void;
+  contactId: any;
 }) => {
+  const [availableTags, setAvailableTags] = useState([]);
+
+  const handleGetAvailableTags = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/tags/available`
+      );
+      console.log(
+        "Available tags response:",
+        JSON.stringify(response.data, null, 2)
+      );
+      setAvailableTags(response.data.data);
+    } catch (error) {
+      console.error("Error fetching available tags:", error);
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    handleGetAvailableTags();
+  }, []);
+
   return (
     <Modal
       visible={visible}
@@ -65,15 +90,15 @@ const AddTagModal = ({
               className="max-h-60 overflow-y-scroll"
               showsVerticalScrollIndicator={false}
             >
-              {fakeTags.map((tag) => (
+              {availableTags.map((tag) => (
                 <TouchableOpacity
                   key={tag.id}
                   className="flex-row items-center justify-between p-3 border-b border-gray-200"
                 >
                   <View className="flex-row items-center">
-                    <View
+                    {/* <View
                       className={`w-4 h-4 rounded-full ${tag.color} mr-3`}
-                    />
+                    /> */}
                     <Text className="text-gray-800">{tag.name}</Text>
                   </View>
                   <Pressable className="p-2 rounded-lg bg-primary/20 hover:bg-blue-200">

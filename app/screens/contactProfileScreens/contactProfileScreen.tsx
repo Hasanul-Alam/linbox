@@ -55,7 +55,7 @@ const ProfileScreen = () => {
             spent={spent}
           />
           <GroupsSection theme={theme} contactId={id} />
-          <TagsSection theme={theme} />
+          <TagsSection theme={theme} contactId={id} />
           <NotesSection
             theme={theme}
             onEditNote={toggleUpdatePopup}

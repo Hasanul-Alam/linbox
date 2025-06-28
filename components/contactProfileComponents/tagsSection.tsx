@@ -1,11 +1,13 @@
 import GroupsAndTagsSkeleton from "@/app/skeletons/groupsAndTagsSkeleton";
+import axiosInstance from "@/utils/axiosInstance";
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import AddTagModal from "./addTagModal";
 
 interface TagsSectionProps {
   theme: "light" | "dark";
+  contactId: any;
 }
 
 const currentContact = {
@@ -18,10 +20,32 @@ const currentContact = {
   },
 };
 
-const TagsSection = ({ theme }: TagsSectionProps) => {
+const TagsSection = ({ theme, contactId }: TagsSectionProps) => {
   const [tagQueryText, setTagQueryText] = useState("");
   const [isAddTagModalOpen, setIsAddTagModalOpen] = useState(false);
+  interface Tag {
+    id: number;
+    name: string;
+    color?: string;
+  }
+
+  const [contactTags, setContactTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleGetTags = async () => {
+    setIsLoading(true);
+    try {
+      // Fetch tags from API
+      const response = await axiosInstance.get(
+        `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/tags`
+      );
+      setContactTags(response.data.data);
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleAddTag = () => {
     console.log("Adding tag");
@@ -30,6 +54,10 @@ const TagsSection = ({ theme }: TagsSectionProps) => {
   const handleRemoveTagFromContact = (id: number) => {
     console.log(`Removed tag with id: ${id} from contact`);
   };
+
+  useEffect(() => {
+    handleGetTags();
+  }, [contactId]);
 
   if (isLoading) {
     return (
@@ -48,7 +76,7 @@ const TagsSection = ({ theme }: TagsSectionProps) => {
           <Text
             className={`text-lg font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}
           >
-            Tags ({currentContact.tags.data.length})
+            Tags ({contactTags.length})
           </Text>
           <TouchableOpacity onPress={() => setIsAddTagModalOpen(true)}>
             <Ionicons
@@ -62,16 +90,16 @@ const TagsSection = ({ theme }: TagsSectionProps) => {
         {/* Tags List */}
         {currentContact.tags.data.length > 0 ? (
           <View className="flex-row flex-wrap gap-2 mb-4">
-            {currentContact.tags.data.map((tag) => (
+            {contactTags.map((tag) => (
               <View
                 key={tag.id}
-                className={`flex-row items-center px-3 py-1.5 rounded-full ${tag.color}`}
+                className={`flex-row items-center px-3 py-1.5 rounded-lg bg-primary/20`}
               >
-                <Text className="text-white mr-1">{tag.name}</Text>
+                <Text className="text-black mr-1">{tag.name}</Text>
                 <TouchableOpacity
                   onPress={() => handleRemoveTagFromContact(tag.id)}
                 >
-                  <Entypo name="cross" size={16} color="white" />
+                  <Entypo name="cross" size={16} color="green" />
                 </TouchableOpacity>
               </View>
             ))}
@@ -132,6 +160,7 @@ const TagsSection = ({ theme }: TagsSectionProps) => {
         <AddTagModal
           visible={isAddTagModalOpen}
           onClose={() => setIsAddTagModalOpen(false)}
+          contactId={contactId}
         />
       )}
     </>
