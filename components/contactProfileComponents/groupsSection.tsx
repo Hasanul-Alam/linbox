@@ -1,44 +1,145 @@
+import GroupsAndTagsSkeleton from "@/app/skeletons/groupsAndTagsSkeleton";
+import axiosInstance from "@/utils/axiosInstance";
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import AddGroupModal from "./addGroupModal";
 
 interface GroupsSectionProps {
   theme: "light" | "dark";
+  contactId: any;
 }
 
-const currentContact = {
-  contactGroups: {
-    data: [
-      { id: 1, name: "VIP" },
-      { id: 2, name: "Customers" },
-      { id: 3, name: "Work" },
-    ],
-  },
-};
+interface Group {
+  id: number;
+  name: string;
+}
 
-const GroupsSection = ({ theme }: GroupsSectionProps) => {
-  const [groupsQueryText, setGroupsQueryText] = useState("");
+const GroupsSection = ({ theme, contactId }: GroupsSectionProps) => {
   const [isAddGroupModalOpen, setIsAddGroupModalOpen] = useState(false);
+  const [allGroups, setAllGroups] = useState([]);
+  const [contactGroups, setContactGroups] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [addGroupLoading, setAddGroupLoading] = useState(false);
+  const [deletingGroupId, setDeletingGroupId] = useState<number | null>(null);
 
-  const handleAddGroup = () => {
-    console.log("Adding group");
+  const handleGetGroups = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.get("/contact-groups");
+      console.log(JSON.stringify(response.data, null, 2));
+      setAllGroups(response.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleRemoveGroupFromContact = (id: number) => {
-    console.log(`Removed group with id: ${id} from contact`);
+  const handleGetContactGroups = async (contactId: string) => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.get(
+        `/contacts/${contactId}/contact-groups`
+      );
+      console.log(JSON.stringify(response.data, null, 2));
+      setContactGroups(response.data.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const handleAddGroup = async (ids: (string | number)[]) => {
+    const isAlreadyAdded = contactGroups.some((group: Group) =>
+      ids.includes(group.id)
+    );
+
+    if (isAlreadyAdded) {
+      Alert.alert(
+        "Group Already Added",
+        "This group has already been added to this contact."
+      );
+      return;
+    }
+
+    try {
+      setAddGroupLoading(true);
+      const response = await axiosInstance.post(
+        `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/contact-groups`,
+        {
+          contact_groups: ids,
+        }
+      );
+      if (response.data.status === 200) {
+        // Add the group to the local state
+        setContactGroups((prevGroups: Group[]) => [
+          ...prevGroups,
+          ...allGroups.filter((group: Group) => ids.includes(group.id)),
+        ]);
+        // Refetch contact groups after adding a new group
+        // handleGetContactGroups("9d3e5117-ec39-4cb0-bed7-b223a1e75601");
+      }
+    } catch (error) {
+      console.error("Error adding group:", error);
+    } finally {
+      setIsAddGroupModalOpen(false);
+      setAddGroupLoading(false);
+    }
+  };
+
+  const handleRemoveGroupFromContact = async (id: number) => {
+    try {
+      setDeletingGroupId(id);
+      const response = await axiosInstance.delete(
+        `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/contact-groups`,
+        {
+          data: { id: id },
+        }
+      );
+      if (response.status === 200) {
+        // Remove the group from the local state
+        setContactGroups((prevGroups: Group[]) =>
+          prevGroups.filter((group: Group) => group.id !== id)
+        );
+      }
+    } catch (error) {
+      console.error("Error removing group:", error);
+    } finally {
+      setDeletingGroupId(null);
+    }
+  };
+
+  useEffect(() => {
+    handleGetGroups();
+    handleGetContactGroups("9d3e5117-ec39-4cb0-bed7-b223a1e75601");
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View className="border-b border-gray-300">
+        <GroupsAndTagsSkeleton theme={"light"} />
+      </View>
+    );
+  }
 
   return (
     <>
       <View
-        className={`px-6 py-4 ${theme === "dark" ? "bg-gray-800" : "bg-white"} rounded-xl  bord w-[90%] mx-auto`}
+        className={`px-6 py-4 ${theme === "dark" ? "bg-gray-800" : "bg-white"} rounded-xl w-[90%] mx-auto`}
       >
         <View className="flex-row justify-between items-center mb-4">
           <Text
             className={`text-lg font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}
           >
-            Groups ({currentContact.contactGroups.data.length})
+            Groups ({contactGroups?.length})
           </Text>
           <TouchableOpacity onPress={() => setIsAddGroupModalOpen(true)}>
             <Ionicons
@@ -50,9 +151,9 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
         </View>
 
         {/* Groups List */}
-        {currentContact.contactGroups.data.length > 0 ? (
+        {contactGroups?.length > 0 ? (
           <View className="flex-row flex-wrap gap-2 mb-4">
-            {currentContact.contactGroups.data.map((group) => (
+            {contactGroups.map((group: Group) => (
               <View
                 key={group.id}
                 className={`flex-row items-center px-3 py-1.5 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-primary/20"}`}
@@ -65,11 +166,18 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
                 <TouchableOpacity
                   onPress={() => handleRemoveGroupFromContact(group.id)}
                 >
-                  <Entypo
-                    name="cross"
-                    size={16}
-                    color={theme === "dark" ? "#9ca3af" : "green"}
-                  />
+                  {deletingGroupId === group.id ? (
+                    <ActivityIndicator
+                      size="small"
+                      color={theme === "dark" ? "#9ca3af" : "green"}
+                    />
+                  ) : (
+                    <Entypo
+                      name="cross"
+                      size={16}
+                      color={theme === "dark" ? "#9ca3af" : "green"}
+                    />
+                  )}
                 </TouchableOpacity>
               </View>
             ))}
@@ -88,53 +196,6 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
             </Text>
           </View>
         )}
-
-        {/* Group Search */}
-        {/* <View
-          className={`mt-2 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"} p-2`}
-        >
-          <TextInput
-            placeholder="Group name..."
-            placeholderTextColor={theme === "dark" ? "#9ca3af" : "#6b7280"}
-            value={groupsQueryText}
-            onChangeText={setGroupsQueryText}
-            className={`px-3 py-2 ${theme === "dark" ? "text-white" : "text-gray-900"}`}
-          />
-        </View> */}
-
-        {/* Search Results (mock) */}
-        {groupsQueryText && (
-          <View
-            className={`mt-2 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"} p-2`}
-          >
-            <TouchableOpacity
-              className="p-3 flex-row items-center"
-              onPress={handleAddGroup}
-            >
-              <View
-                className={`w-10 h-10 ${theme === "dark" ? "bg-gray-600" : "bg-gray-200"} rounded-full items-center justify-center mr-3`}
-              >
-                <Text
-                  className={`${theme === "dark" ? "text-white" : "text-gray-900"} font-bold`}
-                >
-                  {groupsQueryText.charAt(0).toUpperCase()}
-                </Text>
-              </View>
-              <View>
-                <Text
-                  className={`font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}
-                >
-                  {groupsQueryText}
-                </Text>
-                <Text
-                  className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  Create new group
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )}
       </View>
       {/* Divider */}
       <View className="w-full h-[1px] bg-gray-300"></View>
@@ -143,6 +204,9 @@ const GroupsSection = ({ theme }: GroupsSectionProps) => {
         <AddGroupModal
           visible={isAddGroupModalOpen}
           onClose={() => setIsAddGroupModalOpen(false)}
+          onAdd={handleAddGroup}
+          allGroups={allGroups}
+          isLoading={addGroupLoading}
         />
       )}
     </>

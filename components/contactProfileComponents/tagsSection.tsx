@@ -1,3 +1,4 @@
+import GroupsAndTagsSkeleton from "@/app/skeletons/groupsAndTagsSkeleton";
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -20,6 +21,7 @@ const currentContact = {
 const TagsSection = ({ theme }: TagsSectionProps) => {
   const [tagQueryText, setTagQueryText] = useState("");
   const [isAddTagModalOpen, setIsAddTagModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddTag = () => {
     console.log("Adding tag");
@@ -28,6 +30,14 @@ const TagsSection = ({ theme }: TagsSectionProps) => {
   const handleRemoveTagFromContact = (id: number) => {
     console.log(`Removed tag with id: ${id} from contact`);
   };
+
+  if (isLoading) {
+    return (
+      <View className="border-b border-gray-300">
+        <GroupsAndTagsSkeleton theme={"light"} />
+      </View>
+    );
+  }
 
   return (
     <>

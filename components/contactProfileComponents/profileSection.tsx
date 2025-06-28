@@ -6,17 +6,16 @@ interface ProfileSectionProps {
   theme: "light" | "dark";
 }
 
-const currentContact = {
-  id: "1",
-  name: "John Doe",
-  whatsappNumber: "+1 234 567 890",
-  avatar: null,
-  pinned: true,
-};
-
-const ProfileSection = ({ theme }: ProfileSectionProps) => {
-  const [cost] = useState(125.5);
+const ProfileSection = ({
+  theme,
+  name,
+  whatsappNumber,
+  spent,
+  avatar,
+}: any) => {
   const [profileAnim] = useState(new Animated.Value(0));
+
+  console.log(" ProfileSection props:", name, whatsappNumber, spent, avatar);
 
   useEffect(() => {
     Animated.timing(profileAnim, {
@@ -47,15 +46,15 @@ const ProfileSection = ({ theme }: ProfileSectionProps) => {
       <View className="items-center pb-6 pt-2">
         {/* Profile Image */}
         <View className="mb-3 relative">
-          {currentContact.avatar ? (
+          {avatar ? (
             <Image
-              source={{ uri: currentContact.avatar }}
+              source={{ uri: avatar }}
               className="w-28 h-28 rounded-full"
             />
           ) : (
             <View className="w-28 h-28 rounded-full bg-primary items-center justify-center">
               <Text className="text-4xl font-semibold text-black">
-                {currentContact.name.charAt(0)}
+                {name.charAt(0)}
               </Text>
             </View>
           )}
@@ -63,11 +62,11 @@ const ProfileSection = ({ theme }: ProfileSectionProps) => {
 
         {/* Profile Name */}
         <View className="flex-row items-center mb-1">
-          <Pressable onPress={() => copyToClipboard(currentContact.name)}>
+          <Pressable onPress={() => copyToClipboard(name)}>
             <Text
               className={`text-2xl font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}
             >
-              {currentContact.name}
+              {name}
             </Text>
           </Pressable>
         </View>
@@ -82,13 +81,11 @@ const ProfileSection = ({ theme }: ProfileSectionProps) => {
               color={"green"}
               style={{ marginRight: 4 }}
             />
-            <Pressable
-              onPress={() => copyToClipboard(currentContact.whatsappNumber)}
-            >
+            <Pressable onPress={() => copyToClipboard(whatsappNumber)}>
               <Text
                 className={`${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}
               >
-                {currentContact.whatsappNumber}
+                {whatsappNumber}
               </Text>
             </Pressable>
           </View>
@@ -105,7 +102,7 @@ const ProfileSection = ({ theme }: ProfileSectionProps) => {
               <Text
                 className={`font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}
               >
-                ${cost.toFixed(2)}
+                ${JSON.parse(spent).toFixed(2)}
               </Text>
             </View>
           </View>

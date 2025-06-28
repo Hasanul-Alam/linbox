@@ -5,7 +5,7 @@ import NotesSection from "@/components/contactProfileComponents/notesSection";
 import ProfileSection from "@/components/contactProfileComponents/profileSection";
 import TagsSection from "@/components/contactProfileComponents/tagsSection";
 import DeleteModal from "@/components/reusableComponents/deleteModal";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,6 +17,8 @@ const ProfileScreen = () => {
   const [updateNoteText, setUpdateNoteText] = useState("");
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
   const [showDeleteNotePopup, setShowDeleteNotePopup] = useState(false);
+  const params = useLocalSearchParams();
+  const { id, name, whatsappNumber, spent } = params;
 
   const handleBack = () => router.back();
 
@@ -38,14 +40,21 @@ const ProfileScreen = () => {
     setShowDeleteNotePopup(!showDeleteNotePopup);
   };
 
+  console.log("ProfileScreen params:", params.spent);
+
   return (
     <View className={`flex-1 ${theme === "dark" ? "bg-gray-900" : "bg-white"}`}>
       <SafeAreaView className="flex-1">
         <Header theme={theme} onBack={handleBack} />
 
         <ScrollView className="pb-16" showsVerticalScrollIndicator={false}>
-          <ProfileSection theme={theme} />
-          <GroupsSection theme={theme} />
+          <ProfileSection
+            theme={theme}
+            name={name}
+            whatsappNumber={whatsappNumber}
+            spent={spent}
+          />
+          <GroupsSection theme={theme} contactId={id} />
           <TagsSection theme={theme} />
           <NotesSection
             theme={theme}

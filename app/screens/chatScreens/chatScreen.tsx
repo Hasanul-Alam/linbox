@@ -60,6 +60,7 @@ const ChatScreen = () => {
   const scrollViewRef = useRef<ScrollView>(null);
   const params = useLocalSearchParams();
   const { name, whatsappNumber } = params;
+  const contactData = params;
 
   // Initialize with sample messages
   const messages: Message[] = [
@@ -152,7 +153,10 @@ const ChatScreen = () => {
 
   const handleOptionSelect = (value: string) => {
     if (value === "view_profile") {
-      router.push("/screens/contactProfileScreens/contactProfileScreen");
+      router.push({
+        pathname: "/screens/contactProfileScreens/contactProfileScreen",
+        params: contactData,
+      });
     } else if (value === "set_label") {
       console.log("Set label option selected");
     } else if (value === "pin_contact") {

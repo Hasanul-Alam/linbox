@@ -27,6 +27,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-10T09:45:00Z",
     unreadMessagesCount: 3,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#3498DB" }] },
   },
   {
@@ -37,6 +38,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-10T08:15:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -47,6 +49,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-09T17:05:00Z",
     unreadMessagesCount: 1,
     pinned: true,
+    spent: 172.4,
     labels: { data: [{ color: "#F39C12" }] },
   },
   {
@@ -57,6 +60,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-09T15:00:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -67,6 +71,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-08T14:30:00Z",
     unreadMessagesCount: 2,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#1ABC9C" }] },
   },
   {
@@ -77,6 +82,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-08T12:45:00Z",
     unreadMessagesCount: 4,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -87,6 +93,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-07T10:30:00Z",
     unreadMessagesCount: 0,
     pinned: true,
+    spent: 172.4,
     labels: { data: [{ color: "#E74C3C" }] },
   },
   {
@@ -97,6 +104,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-07T09:00:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -107,6 +115,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-06T17:10:00Z",
     unreadMessagesCount: 1,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#9B59B6" }] },
   },
   {
@@ -117,6 +126,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-06T13:45:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -127,6 +137,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-05T08:20:00Z",
     unreadMessagesCount: 2,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#2ECC71" }] },
   },
   {
@@ -137,6 +148,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-04T10:10:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -147,6 +159,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-03T20:40:00Z",
     unreadMessagesCount: 1,
     pinned: true,
+    spent: 172.4,
     labels: { data: [{ color: "#34495E" }] },
   },
   {
@@ -157,6 +170,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-03T11:25:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -167,6 +181,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-02T09:50:00Z",
     unreadMessagesCount: 3,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#D35400" }] },
   },
   {
@@ -177,6 +192,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-01T15:20:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -187,6 +203,7 @@ const mockContacts = [
     lastMessagedAt: "2023-05-01T12:10:00Z",
     unreadMessagesCount: 1,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#16A085" }] },
   },
   {
@@ -197,6 +214,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-30T14:30:00Z",
     unreadMessagesCount: 0,
     pinned: true,
+    spent: 172.4,
     labels: { data: [] },
   },
   {
@@ -207,6 +225,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-29T19:10:00Z",
     unreadMessagesCount: 2,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#BDC3C7" }] },
   },
   {
@@ -217,6 +236,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-28T17:45:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -227,6 +247,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-27T13:55:00Z",
     unreadMessagesCount: 5,
     pinned: true,
+    spent: 172.4,
     labels: { data: [{ color: "#F1C40F" }] },
   },
   {
@@ -237,6 +258,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-26T10:20:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -247,6 +269,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-25T09:30:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#C0392B" }] },
   },
   {
@@ -257,6 +280,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-24T08:00:00Z",
     unreadMessagesCount: 2,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -267,6 +291,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-23T16:25:00Z",
     unreadMessagesCount: 1,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#7F8C8D" }] },
   },
   {
@@ -277,6 +302,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-22T18:40:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -287,6 +313,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-21T14:00:00Z",
     unreadMessagesCount: 4,
     pinned: true,
+    spent: 172.4,
     labels: { data: [{ color: "#2980B9" }] },
   },
   {
@@ -297,6 +324,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-20T12:00:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
   {
@@ -307,6 +335,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-19T11:45:00Z",
     unreadMessagesCount: 0,
     pinned: false,
+    spent: 142.3,
     labels: { data: [{ color: "#27AE60" }] },
   },
   {
@@ -317,6 +346,7 @@ const mockContacts = [
     lastMessagedAt: "2023-04-18T13:10:00Z",
     unreadMessagesCount: 2,
     pinned: false,
+    spent: 142.3,
     labels: { data: [] },
   },
 ];
