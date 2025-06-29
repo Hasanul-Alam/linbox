@@ -10,7 +10,9 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 
+import { Provider } from "react-redux";
 import "../global.css";
+import store from "./redux/store/store";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -24,31 +26,33 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(login)/login" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="screens/profileScreens/profile"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="screens/chatScreens/chatScreen"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="screens/contactProfileScreens/contactProfileScreen"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="screens/customerSignIn"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <Stack>
+          {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(login)/login" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="screens/profileScreens/profile"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="screens/chatScreens/chatScreen"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="screens/contactProfileScreens/contactProfileScreen"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="screens/customerSignIn"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </Provider>
   );
 }
