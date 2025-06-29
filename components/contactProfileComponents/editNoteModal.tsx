@@ -1,5 +1,7 @@
-import { useEffect, useRef } from "react";
+import axiosInstance from "@/utils/axiosInstance";
+import { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Animated,
   Pressable,
   Text,
@@ -12,20 +14,42 @@ interface EditNoteModalProps {
   visible: boolean;
   theme: "light" | "dark";
   noteText: string;
+  noteId: any;
   onTextChange: (text: string) => void;
   onClose: () => void;
-  onSave: () => void;
 }
 
 const EditNoteModal = ({
   visible,
   theme,
   noteText,
+  noteId,
   onTextChange,
   onClose,
-  onSave,
 }: EditNoteModalProps) => {
   const popupScale = useRef(new Animated.Value(0)).current;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleUpdateNote = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.post(
+        `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/notes/${noteId}`,
+        {
+          content: noteText,
+        }
+      );
+      if (response.status === 200) {
+        // Do real time change later.
+        console.log("note updated successfully");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+      onClose();
+    }
+  };
 
   useEffect(() => {
     if (visible) {
@@ -65,8 +89,7 @@ const EditNoteModal = ({
               value={noteText}
               onChangeText={onTextChange}
               multiline
-              className={`p-3 rounded-lg border mb-6 ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-900 border-gray-300"}`}
-              style={{ minHeight: 120 }}
+              className={`px-3 pb-5 rounded-lg border mb-6 ${theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-white text-gray-900 border-gray-300"}`}
             />
             <View className="flex-row justify-end gap-3">
               <TouchableOpacity
@@ -80,10 +103,22 @@ const EditNoteModal = ({
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                className="px-5 py-2.5 bg-indigo-600 rounded-lg"
-                onPress={onSave}
+                className={`px-5 py-2.5 rounded-lg flex-row items-center justify-center ${
+                  isLoading ? "bg-indigo-400" : "bg-indigo-600"
+                }`}
+                onPress={handleUpdateNote}
+                disabled={isLoading}
               >
-                <Text className="text-white font-medium">Update</Text>
+                {isLoading ? (
+                  <>
+                    <Text className="text-white font-medium me-2">
+                      Updating
+                    </Text>
+                    <ActivityIndicator size="small" color="#ffffff" />
+                  </>
+                ) : (
+                  <Text className="text-white font-medium">Update</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>

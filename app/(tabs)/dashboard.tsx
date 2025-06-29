@@ -46,6 +46,7 @@ const Dashboard = () => {
   const handleGetDashboardData = async () => {
     setIsLoading(true);
     try {
+      console.log("getting dashboard data inside function.");
       const response = await axiosInstance.get(`/dashboard`);
       console.log("Dashboard data:", response.data);
       if (response.data.status === 200) {
@@ -60,9 +61,12 @@ const Dashboard = () => {
     }
   };
 
+  console.log("hello from dashboard");
+
   useEffect(() => {
     if (!dashboardData || !messageAnalytics) {
       handleGetDashboardData();
+      console.log("getting dashboard data.");
     }
     // testRequest();
   }, []);

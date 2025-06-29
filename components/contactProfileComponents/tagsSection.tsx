@@ -2,7 +2,7 @@ import GroupsAndTagsSkeleton from "@/app/skeletons/groupsAndTagsSkeleton";
 import axiosInstance from "@/utils/axiosInstance";
 import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import AddTagModal from "./addTagModal";
 
 interface TagsSectionProps {
@@ -21,20 +21,20 @@ const currentContact = {
 };
 
 const TagsSection = ({ theme, contactId }: TagsSectionProps) => {
-  const [tagQueryText, setTagQueryText] = useState("");
   const [isAddTagModalOpen, setIsAddTagModalOpen] = useState(false);
+  const [contactTags, setContactTags] = useState<Tag[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [removingTagId, setRemovingTagId] = useState(null);
+
   interface Tag {
     id: number;
     name: string;
     color?: string;
   }
-
-  const [contactTags, setContactTags] = useState<Tag[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleGetTags = async () => {
     setIsLoading(true);
     try {
+      setIsLoading(true);
       // Fetch tags from API
       const response = await axiosInstance.get(
         `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/tags`
@@ -44,15 +44,64 @@ const TagsSection = ({ theme, contactId }: TagsSectionProps) => {
       console.error("Error fetching tags:", error);
     } finally {
       setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const handleAddTag = () => {
-    console.log("Adding tag");
+  const handleAddTags = async (ids: any) => {
+    try {
+      const response = await axiosInstance.post(
+        `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/tags`,
+        {
+          tags: ids,
+        }
+      );
+      if (response.status === 200) {
+        setContactTags((prevTags) => [...prevTags, response.data.data]);
+      }
+    } catch (error) {
+      console.error("Error adding tag:", error);
+    } finally {
+      setIsAddTagModalOpen(false);
+    }
+    console.log("Adding tag", ids);
   };
 
-  const handleRemoveTagFromContact = (id: number) => {
-    console.log(`Removed tag with id: ${id} from contact`);
+  // const handleCreateTag = async (tagName: string) => {
+  //   try {
+  //     setIsCreating(true);
+  //     const response = await axiosInstance.post(`/tags`, {
+  //       name: tagName,
+  //     });
+  //     if (response.status === 200) {
+  //       setContactTags((prevTags) => [...prevTags, response.data.data]);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error creating tag:", error);
+  //   } finally {
+  //     setIsAddTagModalOpen(false);
+  //     setIsCreating(false);
+  //   }
+  //   console.log("Creating tag", tagName);
+  // };
+
+  const handleRemoveTagFromContact = async (id: any) => {
+    try {
+      setRemovingTagId(id);
+      const response = await axiosInstance.delete(
+        `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/tags/${id}`
+      );
+      if (response.status === 200) {
+        // Remove the tag from the local state
+        setContactTags((prevTags: Tag[]) =>
+          prevTags.filter((tag: Tag) => tag.id !== id)
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setRemovingTagId(null);
+    }
   };
 
   useEffect(() => {
@@ -99,7 +148,11 @@ const TagsSection = ({ theme, contactId }: TagsSectionProps) => {
                 <TouchableOpacity
                   onPress={() => handleRemoveTagFromContact(tag.id)}
                 >
-                  <Entypo name="cross" size={16} color="green" />
+                  {removingTagId === tag.id ? (
+                    <ActivityIndicator size="small" color="green" />
+                  ) : (
+                    <Entypo name="cross" size={16} color="green" />
+                  )}
                 </TouchableOpacity>
               </View>
             ))}
@@ -118,40 +171,6 @@ const TagsSection = ({ theme, contactId }: TagsSectionProps) => {
             </Text>
           </View>
         )}
-
-        {/* Search Results (mock) */}
-        {tagQueryText && (
-          <View
-            className={`mt-2 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"} p-2`}
-          >
-            <TouchableOpacity
-              className="p-3 flex-row items-center"
-              onPress={handleAddTag}
-            >
-              <View
-                className={`w-10 h-10 ${theme === "dark" ? "bg-gray-600" : "bg-gray-200"} rounded-full items-center justify-center mr-3`}
-              >
-                <Text
-                  className={`${theme === "dark" ? "text-white" : "text-gray-900"} font-bold`}
-                >
-                  {tagQueryText.charAt(0).toUpperCase()}
-                </Text>
-              </View>
-              <View>
-                <Text
-                  className={`font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}
-                >
-                  {tagQueryText}
-                </Text>
-                <Text
-                  className={`text-xs ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  Create new tag
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )}
       </View>
       {/* Divider */}
       <View className="w-full h-[1px] bg-gray-300"></View>
@@ -161,6 +180,8 @@ const TagsSection = ({ theme, contactId }: TagsSectionProps) => {
           visible={isAddTagModalOpen}
           onClose={() => setIsAddTagModalOpen(false)}
           contactId={contactId}
+          isLoading={isLoading}
+          onAdd={handleAddTags}
         />
       )}
     </>

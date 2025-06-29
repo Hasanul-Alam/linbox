@@ -1,5 +1,7 @@
+import NoteItemSkeleton from "@/app/skeletons/noteItemSkeleton";
+import axiosInstance from "@/utils/axiosInstance";
 import { Feather } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import AddNoteForm from "./addNoteForm";
 import NoteItem from "./noteItem";
@@ -7,40 +9,23 @@ import NoteItem from "./noteItem";
 interface NotesSectionProps {
   theme: "light" | "dark";
   onEditNote: (noteId: number, content: string) => void;
-  onDeleteNote: () => void;
+  onDeleteNote: (noteId: any) => void;
 }
 
-const currentContact = {
-  notes: {
-    data: [
-      {
-        id: 1,
-        content:
-          "Meeting scheduled for next week. Please prepare the quarterly report.",
-        created_at: "2023-05-15T10:30:00Z",
-        user: {
-          data: {
-            id: 1,
-            name: "Jane Smith",
-            avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-          },
-        },
-      },
-      {
-        id: 2,
-        content: "Agreed on 15% discount for bulk order.",
-        created_at: "2023-05-10T14:15:00Z",
-        user: {
-          data: {
-            id: 2,
-            name: "Mike Johnson",
-            avatar: null,
-          },
-        },
-      },
-    ],
-  },
-};
+interface NoteUserData {
+  id: number;
+  name: string;
+  avatar: string | null;
+}
+
+interface Note {
+  id: number;
+  content: string;
+  created_at: string;
+  user: {
+    data: NoteUserData;
+  };
+}
 
 const NotesSection = ({
   theme,
@@ -48,6 +33,24 @@ const NotesSection = ({
   onDeleteNote,
 }: NotesSectionProps) => {
   const [addNoteText, setAddNoteText] = useState("");
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch Notes
+  const handleGetNotes = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axiosInstance.get(
+        `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/notes`
+      );
+      console.log("notes: ", response);
+      setNotes(response.data.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleAddNote = () => {
     if (!addNoteText.trim()) return;
@@ -59,6 +62,19 @@ const NotesSection = ({
     console.log(`Copied to clipboard: ${text}`);
   };
 
+  useEffect(() => {
+    handleGetNotes();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View className="mt-5 px-5">
+        <NoteItemSkeleton />
+        <NoteItemSkeleton />
+      </View>
+    );
+  }
+
   return (
     <View
       className={`px-6 py-4 mt-4 ${theme === "dark" ? "bg-gray-800" : "bg-white"}`}
@@ -67,13 +83,13 @@ const NotesSection = ({
         <Text
           className={`text-lg font-semibold ${theme === "dark" ? "text-white" : "text-gray-900"}`}
         >
-          Notes ({currentContact.notes.data.length})
+          Notes ({notes.length})
         </Text>
       </View>
 
       {/* Notes List */}
-      {currentContact.notes.data.length > 0 ? (
-        currentContact.notes.data.map((note) => (
+      {notes.length > 0 ? (
+        notes.map((note) => (
           <NoteItem
             key={note.id}
             note={note}

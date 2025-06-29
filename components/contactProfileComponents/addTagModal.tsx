@@ -2,6 +2,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Modal,
   Pressable,
   ScrollView,
@@ -11,49 +12,96 @@ import {
   View,
 } from "react-native";
 
-const fakeTags = [
-  { id: "1", name: "Priority", color: "bg-red-500" },
-  { id: "2", name: "Follow-up", color: "bg-blue-500" },
-  { id: "3", name: "Client", color: "bg-green-500" },
-  { id: "4", name: "VIP", color: "bg-purple-500" },
-  { id: "5", name: "Personal", color: "bg-yellow-500" },
-  { id: "6", name: "Business", color: "bg-indigo-500" },
-  { id: "7", name: "Urgent", color: "bg-orange-500" },
-  { id: "8", name: "Friend", color: "bg-pink-500" },
-  { id: "9", name: "Family", color: "bg-teal-500" },
-  { id: "10", name: "Work", color: "bg-gray-500" },
-];
+type Tag = {
+  id: string;
+  name: string;
+  color?: string;
+};
 
 const AddTagModal = ({
   visible,
   onClose,
-  contactId, // Assuming contactId is passed to fetch available tags
+  contactId,
+  onAdd,
+  isLoading,
 }: {
   visible: boolean;
   onClose: () => void;
-  contactId: any;
+  contactId: string;
+  onAdd: (selectedTags: string[]) => void;
+  isLoading: boolean;
 }) => {
-  const [availableTags, setAvailableTags] = useState([]);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+  const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
+  const [searchText, setSearchText] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [isCreating, setIsCreating] = useState(false);
 
-  const handleGetAvailableTags = async () => {
+  const fetchAvailableTags = async () => {
     try {
       const response = await axiosInstance.get(
         `/contacts/9d3e5117-ec39-4cb0-bed7-b223a1e75601/tags/available`
       );
-      console.log(
-        "Available tags response:",
-        JSON.stringify(response.data, null, 2)
-      );
       setAvailableTags(response.data.data);
+      setFilteredTags(response.data.data);
     } catch (error) {
       console.error("Error fetching available tags:", error);
-    } finally {
     }
   };
 
   useEffect(() => {
-    handleGetAvailableTags();
-  }, []);
+    if (visible) {
+      fetchAvailableTags();
+      setSelectedTags([]);
+      setSearchText("");
+    }
+  }, [visible]);
+
+  useEffect(() => {
+    if (searchText) {
+      const filtered = availableTags.filter((tag) =>
+        tag.name.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilteredTags(filtered);
+    } else {
+      setFilteredTags(availableTags);
+    }
+  }, [searchText, availableTags]);
+
+  const toggleTagSelection = (tagId: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tagId)
+        ? prev.filter((id) => id !== tagId)
+        : [...prev, tagId]
+    );
+  };
+
+  const handleCreateTag = async (tagName: string) => {
+    try {
+      setIsCreating(true);
+      const response = await axiosInstance.post(`/tags`, {
+        name: tagName,
+      });
+      if (response.status === 200) {
+        // setContactTags((prevTags) => [...prevTags, response.data.data]);
+        setAvailableTags((prevTags) => [...prevTags, response.data.data]);
+        setSelectedTags((prev) => [...prev, response.data.data.id]);
+        setSearchText("");
+      }
+    } catch (error) {
+      console.error("Error creating tag:", error);
+    } finally {
+      // setIsAddTagModalOpen(false);
+      setIsCreating(false);
+    }
+    console.log("Creating tag", tagName);
+  };
+
+  const handleAddTags = () => {
+    onAdd(selectedTags);
+    setSelectedTags([]);
+    onClose();
+  };
 
   return (
     <Modal
@@ -62,52 +110,118 @@ const AddTagModal = ({
       transparent
       onRequestClose={onClose}
     >
-      {/* Backdrop with Pressable */}
       <Pressable
-        className="flex-1 bg-black/50 justify-center items-center p-4"
+        className="flex-1 bg-black/40 justify-center items-center px-4"
         onPress={onClose}
       >
-        {/* Modal Container - needs to stop press propagation */}
         <Pressable
-          className="w-full bg-white rounded-lg p-6 max-w-md"
           onPress={(e) => e.stopPropagation()}
+          className="w-full max-w-md bg-white rounded-2xl p-6 shadow-lg"
         >
           {/* Header */}
           <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-xl font-bold text-gray-800">Add New Tag</Text>
+            <Text className="text-2xl font-semibold text-gray-800">
+              Add Tags
+            </Text>
             <TouchableOpacity onPress={onClose}>
-              <Text className="text-gray-500 text-lg">✕</Text>
+              <Ionicons name="close" size={24} color="#9ca3af" />
             </TouchableOpacity>
           </View>
 
-          {/* Body */}
-          <View className="mb-2">
-            <TextInput
-              placeholder="Search Tag"
-              className="border-b border-gray-300 rounded-md p-3 mb-4"
+          {/* Search Input */}
+          <View className="flex-row items-center bg-gray-100 rounded-xl px-3 py-2 mb-4">
+            <Ionicons
+              name="search"
+              size={18}
+              color="#9ca3af"
+              className="mr-2"
             />
-            <ScrollView
-              className="max-h-60 overflow-y-scroll"
-              showsVerticalScrollIndicator={false}
-            >
-              {availableTags.map((tag) => (
-                <TouchableOpacity
-                  key={tag.id}
-                  className="flex-row items-center justify-between p-3 border-b border-gray-200"
-                >
-                  <View className="flex-row items-center">
-                    {/* <View
-                      className={`w-4 h-4 rounded-full ${tag.color} mr-3`}
-                    /> */}
-                    <Text className="text-gray-800">{tag.name}</Text>
-                  </View>
-                  <Pressable className="p-2 rounded-lg bg-primary/20 hover:bg-blue-200">
-                    <Ionicons name="add-sharp" size={20} color="black" />
-                  </Pressable>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
+            <TextInput
+              placeholder="Search tag..."
+              value={searchText}
+              onChangeText={setSearchText}
+              placeholderTextColor="#9ca3af"
+              className="flex-1 text-gray-700"
+            />
           </View>
+
+          {/* Tag List */}
+          <ScrollView
+            className="max-h-64 mb-4"
+            showsVerticalScrollIndicator={false}
+          >
+            {filteredTags.map((tag) => (
+              <TouchableOpacity
+                key={tag.id}
+                className="flex-row items-center justify-between px-3 py-3 rounded-lg mb-3 bg-gray-50"
+                onPress={() => toggleTagSelection(tag.id)}
+              >
+                <Text
+                  className={`text-base ${
+                    selectedTags.includes(tag.id)
+                      ? "font-semibold text-primary"
+                      : "text-gray-700"
+                  }`}
+                >
+                  {tag.name}
+                </Text>
+                {selectedTags.includes(tag.id) ? (
+                  <View className="w-6 h-6 rounded-full bg-primary justify-center items-center">
+                    <Ionicons name="checkmark" size={16} color="white" />
+                  </View>
+                ) : (
+                  <View className="w-6 h-6 rounded-full border border-gray-300" />
+                )}
+              </TouchableOpacity>
+            ))}
+
+            {filteredTags.length === 0 && searchText.length && (
+              <Text className="text-gray-500 text-center py-3">
+                {`No tags found for "${searchText.trim()}"`}
+              </Text>
+            )}
+          </ScrollView>
+
+          {/* create tag */}
+          {searchText.length && filteredTags.length === 0 && (
+            <TouchableOpacity
+              className={`h-12 rounded-xl flex-row items-center justify-center ${
+                (filteredTags.length === 0 && searchText.length) ||
+                selectedTags.length > 0
+                  ? "bg-primary"
+                  : "bg-gray-300 opacity-50"
+              }`}
+              onPress={() => handleCreateTag(searchText)}
+              disabled={
+                (!searchText.trim() && selectedTags.length === 0) || isLoading
+              }
+              activeOpacity={0.8}
+            >
+              {isCreating ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text className="text-white font-semibold text-base">
+                  Create {searchText}
+                </Text>
+              )}
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity
+            className={`h-12 rounded-xl flex-row items-center justify-center mt-2 ${
+              (filteredTags.length === 0 && searchText.trim()) ||
+              selectedTags.length > 0
+                ? "bg-primary"
+                : "bg-gray-300 opacity-50"
+            }`}
+            onPress={handleAddTags}
+            disabled={
+              (!searchText.trim() && selectedTags.length === 0) || isLoading
+            }
+            activeOpacity={0.8}
+          >
+            <Text className="text-white font-semibold text-base">Add</Text>
+          </TouchableOpacity>
         </Pressable>
       </Pressable>
     </Modal>

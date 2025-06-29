@@ -12,7 +12,7 @@ interface DeleteModalProps {
   theme: "light" | "dark";
   itemName?: string;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (noteId: any) => void;
   url?: string;
 }
 

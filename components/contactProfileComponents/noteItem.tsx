@@ -17,7 +17,7 @@ interface NoteItemProps {
   theme: "light" | "dark";
   onEdit: (noteId: number, content: string) => void;
   onCopy: (text: string) => void;
-  onDelete: () => void;
+  onDelete: (noteId: any) => void;
 }
 
 const NoteItem = ({ note, theme, onEdit, onCopy, onDelete }: NoteItemProps) => {
@@ -98,7 +98,7 @@ const NoteItem = ({ note, theme, onEdit, onCopy, onDelete }: NoteItemProps) => {
             </TouchableOpacity>
             <TouchableOpacity
               className="p-1"
-              onPress={() => onDelete()}
+              onPress={() => onDelete(note.id)}
               activeOpacity={0.8}
             >
               <EvilIcons
